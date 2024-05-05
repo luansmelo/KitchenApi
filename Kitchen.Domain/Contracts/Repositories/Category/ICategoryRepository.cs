@@ -1,7 +1,7 @@
 ﻿
 using Kitchen.Domain.Entities;
 
-namespace Kitchen.Domain.Contracts.Repositories
+namespace Kitchen.Domain.Contracts
 {
     public interface ICategoryRepository
     {

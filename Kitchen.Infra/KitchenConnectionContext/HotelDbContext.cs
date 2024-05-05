@@ -15,6 +15,7 @@ namespace Kitchen.Infra.KitchenConnectionContext
         }
 
         public DbSet<Category> Category { get; set; }
+        public DbSet<Measurement> Measurement { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

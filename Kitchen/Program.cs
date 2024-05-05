@@ -1,4 +1,5 @@
 using Kitchen.Application.UseCases;
+using Kitchen.Domain.Contracts;
 using Kitchen.Domain.Contracts.Repositories;
 using Kitchen.Domain.Contracts.UseCases;
 using Kitchen.Infra.KitchenConnectionContext;
@@ -16,7 +17,9 @@ namespace Kitchen
 
             builder.Services.AddControllers();
             builder.Services.AddScoped<ICategoryUseCase, CategoryUseCase>();
+            builder.Services.AddScoped<IMeasurementUseCase, MearuementUseCase>();
             builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+            builder.Services.AddScoped<IMeasurementRepository, MeasurementRepository>();
             builder.Services.AddPersistence(builder.Configuration);
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();

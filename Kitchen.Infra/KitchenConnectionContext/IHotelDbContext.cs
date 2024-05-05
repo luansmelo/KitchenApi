@@ -6,5 +6,6 @@ namespace Kitchen.Infra.KitchenConnectionContext
     public interface IHotelDbContext
     {
         DbSet<Category> Category { get; set; }
+        DbSet<Measurement> Measurement { get; set; }
     }
 }
