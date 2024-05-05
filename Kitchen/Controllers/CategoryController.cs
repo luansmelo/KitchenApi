@@ -35,7 +35,23 @@ namespace Kitchen.Controllers
                 var category = await _categoryUseCase.GetById(id);
 
                 return Ok(category);
-            } catch(Exception ex)
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal server error" + ex.Message);
+            }
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<Category>> DeleteById(Guid id)
+        {
+            try
+            {
+                await _categoryUseCase.DeleteById(id);
+
+                return Ok();
+            }
+            catch (Exception ex)
             {
                 return StatusCode(500, "Internal server error" + ex.Message);
             }
