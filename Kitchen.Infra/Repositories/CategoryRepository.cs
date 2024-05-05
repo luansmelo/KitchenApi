@@ -20,6 +20,17 @@ namespace Kitchen.Infra.Repositories
             await _hotelDbContext.SaveChangesAsync();
         }
 
+        public async Task DeleteById(Guid id)
+        {
+            var category = await GetById(id);
+            
+            if (category != null)
+            {
+                _hotelDbContext.Category.Remove(category);
+                await _hotelDbContext.SaveChangesAsync();
+            }
+        }
+
         public async Task<Category> GetById(Guid id)
         {
             return await _hotelDbContext
