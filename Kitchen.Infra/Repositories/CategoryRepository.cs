@@ -26,5 +26,12 @@ namespace Kitchen.Infra.Repositories
                 .Category
                 .FirstOrDefaultAsync(c => c.Id == id);
         }
+
+        public async Task<Category> GetByName(string name)
+        {
+            return await _hotelDbContext
+                .Category
+                .FirstOrDefaultAsync(c => c.Name == name);
+        }
     }
 }

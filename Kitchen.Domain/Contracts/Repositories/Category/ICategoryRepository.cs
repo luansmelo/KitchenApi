@@ -7,5 +7,6 @@ namespace Kitchen.Domain.Contracts.Repositories
     {
         Task AddCategory(Category category);
         Task<Category> GetById(Guid id);
+        Task<Category> GetByName(string name);
     }
 }

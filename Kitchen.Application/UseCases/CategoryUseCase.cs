@@ -10,6 +10,13 @@ namespace Kitchen.Application.UseCases
 
         public async Task AddCategory(Category category)
         {
+            var categoryExists = await _categoryRepository.GetByName(category.Name);
+
+            if (categoryExists != null)
+            {
+                throw new Exception("Categoria já cadastrada");
+            }
+
             await _categoryRepository.AddCategory(category);
         }
 
