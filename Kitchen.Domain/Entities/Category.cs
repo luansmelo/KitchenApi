@@ -10,7 +10,7 @@ namespace Kitchen.Domain.Entities
         public Guid Id { get; private set; }
 
         [Required(ErrorMessage = "Name is required")]
-        public string Name { get; private set; }
+        public string Name { get; set; }
 
         public Category(string name)
         {

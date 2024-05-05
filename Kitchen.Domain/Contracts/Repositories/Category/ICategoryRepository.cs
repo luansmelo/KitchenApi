@@ -9,5 +9,6 @@ namespace Kitchen.Domain.Contracts.Repositories
         Task<Category> GetById(Guid id);
         Task<Category> GetByName(string name);
         Task DeleteById(Guid id);
+        Task UpdateById(Guid id, Category category);
     }
 }

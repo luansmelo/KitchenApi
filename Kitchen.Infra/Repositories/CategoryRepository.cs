@@ -44,5 +44,19 @@ namespace Kitchen.Infra.Repositories
                 .Category
                 .FirstOrDefaultAsync(c => c.Name == name);
         }
+
+        public async Task UpdateById(Guid id, Category category)
+        {
+            var categoryUpdate = await GetById(id);
+            if (categoryUpdate != null)
+            {    
+
+               categoryUpdate.Name = category.Name;
+
+              _hotelDbContext.Category.Update(categoryUpdate);
+
+              await _hotelDbContext.SaveChangesAsync();
+            }
+        }
     }
 }
