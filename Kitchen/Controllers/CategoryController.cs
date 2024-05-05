@@ -12,13 +12,13 @@ namespace Kitchen.Controllers
         private readonly ICategoryUseCase _categoryUseCase = categoryUseCase;
 
         [HttpPost]
-        public IActionResult Add(CategoryInput input)
+        public async Task<IActionResult> Add(CategoryInput input)
         {
             try
             {
                 var category = new Category(input.Name);
 
-                _categoryUseCase.AddCategory(category);
+               await _categoryUseCase.AddCategory(category);
 
                 return Ok();
             } catch (Exception ex)

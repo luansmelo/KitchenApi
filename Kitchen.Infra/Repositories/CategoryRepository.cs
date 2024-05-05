@@ -13,10 +13,10 @@ namespace Kitchen.Infra.Repositories
             _hotelDbContext = hotelDbContext;
         }
 
-        public void AddCategory(Category category)
+        public async Task AddCategory(Category category)
         {
-            _hotelDbContext.Category.Add(category);
-            _hotelDbContext.SaveChanges();
+            await _hotelDbContext.Category.AddAsync(category);
+            await _hotelDbContext.SaveChangesAsync();
         }
     }
 }

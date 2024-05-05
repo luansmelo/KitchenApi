@@ -8,9 +8,9 @@ namespace Kitchen.Application.UseCases
     {
         private readonly ICategoryRepository _categoryRepository = categoryRepository;
 
-        public void AddCategory(Category category)
+        public async Task AddCategory(Category category)
         {
-            _categoryRepository.AddCategory(category);
+            await _categoryRepository.AddCategory(category);
         }
     }
 }
