@@ -20,16 +20,18 @@ namespace Kitchen.Application.UseCases
             await _categoryRepository.AddCategory(category);
         }
 
+        public async Task DeleteById(Guid id)
+        {
+            var category = await GetById(id) ?? throw new Exception("Categoria não encontrada");
+
+            await _categoryRepository.DeleteById(category.Id);
+        }
+
         public async Task<Category> GetById(Guid id)
         {
             var category = await _categoryRepository.GetById(id);
 
-            if (category == null)
-            {
-                throw new Exception("Categoria já cadastrada");
-            }
-
-            return category;
+            return category == null ? throw new Exception("Categoria já cadastrada") : category;
         }
     }
 }

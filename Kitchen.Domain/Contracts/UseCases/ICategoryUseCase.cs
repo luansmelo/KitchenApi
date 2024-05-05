@@ -6,5 +6,6 @@ namespace Kitchen.Domain.Contracts.UseCases
     {
         Task AddCategory(Category category);
         Task<Category> GetById(Guid id);
+        Task DeleteById(Guid id);
     }
 }
