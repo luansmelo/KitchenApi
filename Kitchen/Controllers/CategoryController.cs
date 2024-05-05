@@ -18,10 +18,24 @@ namespace Kitchen.Controllers
             {
                 var category = new Category(input.Name);
 
-               await _categoryUseCase.AddCategory(category);
+                await _categoryUseCase.AddCategory(category);
 
                 return Ok();
             } catch (Exception ex)
+            {
+                return StatusCode(500, "Internal server error" + ex.Message);
+            }
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Category>> GetById(Guid id)
+        {
+            try
+            {
+                var category = await _categoryUseCase.GetById(id);
+
+                return Ok(category);
+            } catch(Exception ex)
             {
                 return StatusCode(500, "Internal server error" + ex.Message);
             }

@@ -4,6 +4,7 @@ namespace Kitchen.Domain.Contracts.UseCases
 {
     public interface ICategoryUseCase
     {
-        public Task AddCategory(Category category);
+        Task AddCategory(Category category);
+        Task<Category> GetById(Guid id);
     }
 }

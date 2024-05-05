@@ -12,5 +12,17 @@ namespace Kitchen.Application.UseCases
         {
             await _categoryRepository.AddCategory(category);
         }
+
+        public async Task<Category> GetById(Guid id)
+        {
+            var category = await _categoryRepository.GetById(id);
+
+            if (category == null)
+            {
+                throw new Exception("Categoria já cadastrada");
+            }
+
+            return category;
+        }
     }
 }

@@ -6,5 +6,6 @@ namespace Kitchen.Domain.Contracts.Repositories
     public interface ICategoryRepository
     {
         Task AddCategory(Category category);
+        Task<Category> GetById(Guid id);
     }
 }
