@@ -38,5 +38,64 @@ namespace Kitchen.Controllers
             }
         }
 
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Group>> GetById(Guid id)
+        {
+            try
+            {
+                var group = await _groupUseCase.GetById(id);
+
+                return Ok(group);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal server error" + ex.Message);
+            }
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteById(Guid id)
+        {
+            try
+            {
+                await _groupUseCase.DeleteById(id);
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal server error" + ex.Message);
+            }
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateById(Guid id, Group group)
+        {
+            try
+            {
+                await _groupUseCase.UpdateById(id, group);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal server error" + ex.Message);
+            }
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<FindGroupsResponse>> GetAll(int page = 1, int pageSize = 10, string sortOrder = "asc")
+        {
+            try
+            {
+                var groups = await _groupUseCase.LoadAll(page, pageSize, sortOrder);
+
+                return Ok(groups);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal server error" + ex.Message);
+            }
+        }
+
     }
 }
