@@ -34,6 +34,11 @@ namespace Kitchen.Application.UseCases
             return category == null ? throw new Exception("Categoria já cadastrada") : category;
         }
 
+        public async Task<FindCategoriesResponse> LoadAll(int page, int pageSize, string sortOrder)
+        {
+           return await _categoryRepository.LoadAll(page, pageSize, sortOrder);
+        }
+
         public async Task UpdateById(Guid id, Category category)
         {
             var categoryExist = await GetById(id) ?? throw new Exception("Categoria não encontrada");
