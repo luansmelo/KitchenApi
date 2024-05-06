@@ -22,26 +22,25 @@ namespace Kitchen.Application.UseCases
 
         public async Task DeleteById(Guid id)
         {
-            var category = await GetById(id) ?? throw new Exception("Categoria não encontrada");
+            var category = await GetById(id);
 
             await _categoryRepository.DeleteById(category.Id);
         }
 
         public async Task<Category> GetById(Guid id)
         {
-            var category = await _categoryRepository.GetById(id);
-
-            return category == null ? throw new Exception("Categoria já cadastrada") : category;
+            return await _categoryRepository.GetById(id) 
+                ?? throw new Exception("Categoria não encontrada");
         }
 
         public async Task<FindCategoriesResponse> LoadAll(int page, int pageSize, string sortOrder)
         {
-           return await _categoryRepository.LoadAll(page, pageSize, sortOrder);
+            return await _categoryRepository.LoadAll(page, pageSize, sortOrder);
         }
 
         public async Task UpdateById(Guid id, Category category)
         {
-            var categoryExist = await GetById(id) ?? throw new Exception("Categoria não encontrada");
+            var categoryExist = await GetById(id);
 
             await _categoryRepository.UpdateById(categoryExist.Id, category);
         }

@@ -1,6 +1,8 @@
-﻿using Kitchen.Domain.Entities;
+﻿
+using Kitchen.Domain.Contracts.UseCases;
+using Kitchen.Domain.Entities;
 
-namespace Kitchen.Domain.Contracts.UseCases
+namespace Kitchen.Domain.Contracts
 {
     public class FindMeasuresResponse
     {

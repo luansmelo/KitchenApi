@@ -1,4 +1,5 @@
-﻿using Kitchen.Domain.Contracts.Repositories;
+﻿using Kitchen.Domain.Contracts;
+using Kitchen.Domain.Contracts.Repositories;
 using Kitchen.Domain.Contracts.UseCases;
 using Kitchen.Domain.Entities;
 
@@ -34,14 +35,13 @@ namespace Kitchen.Application.UseCases
 
         public async Task<Measurement> GetById(Guid id)
         {
-            var measurement = await _measurementRepository.GetById(id);
-
-            return measurement == null ? throw new Exception("Unidade já cadastrada") : measurement;
+            return await _measurementRepository.GetById(id) 
+                ?? throw new Exception("Unidade não encontrada");
         }
 
         public async Task UpdateById(Guid id, Measurement category)
         {
-            var measurementExist = await GetById(id) ?? throw new Exception("Unidade não encontrada");
+            var measurementExist = await GetById(id);
 
             await _measurementRepository.UpdateById(measurementExist.Id, category);
         }

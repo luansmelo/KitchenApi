@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using Kitchen.Domain.Contracts;
 using Kitchen.Domain.Contracts.UseCases;
 using Kitchen.Domain.Entities;
 using Kitchen.Models.Error;

@@ -1,4 +1,5 @@
-﻿using Kitchen.Domain.Contracts.Repositories;
+﻿using Kitchen.Domain.Contracts;
+using Kitchen.Domain.Contracts.Repositories;
 using Kitchen.Domain.Contracts.UseCases;
 using Kitchen.Domain.Entities;
 using Kitchen.Infra.KitchenConnectionContext;

@@ -1,7 +1,5 @@
 ﻿using Kitchen.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Options;
 
 namespace Kitchen.Infra.KitchenConnectionContext
 {
@@ -16,6 +14,7 @@ namespace Kitchen.Infra.KitchenConnectionContext
 
         public DbSet<Category> Category { get; set; }
         public DbSet<Measurement> Measurement { get; set; }
+        public DbSet<Group> Group { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
