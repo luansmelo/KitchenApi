@@ -1,21 +1,31 @@
-﻿using Kitchen.Domain.Contracts.UseCases;
+﻿using FluentValidation;
+using Kitchen.Domain.Contracts.UseCases;
 using Kitchen.Domain.Entities;
-using Kitchen.Models.Category;
+using Kitchen.Models.Category.Validation;
+using Kitchen.Models.Error;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Kitchen.Controllers
 {
     [Route("api/v1/category")]
     [ApiController]
-    public class CategoryController(ICategoryUseCase categoryUseCase) : ControllerBase
+    public class CategoryController(ICategoryUseCase categoryUseCase, IValidator<CategoryInput> validator) : ControllerBase
     {
-        private readonly ICategoryUseCase _categoryUseCase = categoryUseCase;
+        private readonly ICategoryUseCase _categoryUseCase = categoryUseCase; 
+        private readonly IValidator<CategoryInput> _validator = validator;
 
         [HttpPost]
         public async Task<IActionResult> Add(CategoryInput input)
         {
             try
             {
+                var validation = _validator.Validate(input);
+
+                if (!validation.IsValid)
+                {
+                    return BadRequest(validation.Errors.ToCustomValidationFailure());
+                }
+
                 var category = new Category(input.Name);
 
                 await _categoryUseCase.AddCategory(category);

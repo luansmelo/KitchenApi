@@ -1,4 +1,4 @@
-﻿namespace Kitchen.Models.Category
+﻿namespace Kitchen.Models.Category.Validation
 {
     public class CategoryInput
     {

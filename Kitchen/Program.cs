@@ -1,9 +1,11 @@
+using FluentValidation;
 using Kitchen.Application.UseCases;
 using Kitchen.Domain.Contracts;
 using Kitchen.Domain.Contracts.Repositories;
 using Kitchen.Domain.Contracts.UseCases;
 using Kitchen.Infra.KitchenConnectionContext;
 using Kitchen.Infra.Repositories;
+using Kitchen.Models.Category.Validation;
 
 namespace Kitchen
 {
@@ -20,6 +22,7 @@ namespace Kitchen
             builder.Services.AddScoped<IMeasurementUseCase, MearuementUseCase>();
             builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
             builder.Services.AddScoped<IMeasurementRepository, MeasurementRepository>();
+            builder.Services.AddTransient<IValidator<CategoryInput>, CategoryInputValidation>();
             builder.Services.AddPersistence(builder.Configuration);
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
