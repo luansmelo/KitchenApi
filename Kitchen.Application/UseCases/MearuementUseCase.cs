@@ -27,6 +27,11 @@ namespace Kitchen.Application.UseCases
             await _measurementRepository.DeleteById(measurement.Id);
         }
 
+        public async Task<FindMeasuresResponse> LoadAll(int page, int pageSize, string sortOrder)
+        {
+            return await _measurementRepository.LoadAll(page, pageSize, sortOrder);
+        }
+
         public async Task<Measurement> GetById(Guid id)
         {
             var measurement = await _measurementRepository.GetById(id);

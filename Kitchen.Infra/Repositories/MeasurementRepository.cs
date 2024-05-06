@@ -1,4 +1,5 @@
 ﻿using Kitchen.Domain.Contracts.Repositories;
+using Kitchen.Domain.Contracts.UseCases;
 using Kitchen.Domain.Entities;
 using Kitchen.Infra.KitchenConnectionContext;
 using Microsoft.EntityFrameworkCore;
@@ -52,6 +53,30 @@ namespace Kitchen.Infra.Repositories
 
                 await _hotelDbContext.SaveChangesAsync();
             }
+        }
+
+        public async Task<FindMeasuresResponse> LoadAll(int page, int pageSize, string sortOrder)
+        {
+            var query = _hotelDbContext.Measurement.AsQueryable();
+
+            var totalItems = await query.CountAsync();
+            var totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+
+            query = sortOrder.ToLower() == "desc" ? query
+                .OrderByDescending(c => c.Name)
+                : query.OrderBy(c => c.Name);
+
+            var measures = await query
+               .Skip((page - 1) * pageSize)
+               .Take(pageSize)
+               .ToListAsync();
+
+            return new FindMeasuresResponse
+            {
+                Measures = measures.Select(c => new Partial<Measurement> { Id = c.Id, Name = c.Name }).ToList(),
+                TotalPages = totalPages,
+                TotalItems = totalItems
+            };
         }
     }
 }

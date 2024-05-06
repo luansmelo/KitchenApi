@@ -10,5 +10,6 @@ namespace Kitchen.Domain.Contracts.Repositories
         Task<Measurement> GetByName(string name);
         Task DeleteById(Guid id);
         Task UpdateById(Guid id, Measurement measurement);
+        Task<FindMeasuresResponse> LoadAll(int page, int pageSize, string sortOrder);
     }
 }

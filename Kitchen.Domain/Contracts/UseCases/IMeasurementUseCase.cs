@@ -8,5 +8,6 @@ namespace Kitchen.Domain.Contracts.UseCases
         Task<Measurement> GetById(Guid id);
         Task DeleteById(Guid id);
         Task UpdateById(Guid id, Measurement category);
+        Task<FindMeasuresResponse> LoadAll(int page, int pageSize, string sortOrder);
     }
 }

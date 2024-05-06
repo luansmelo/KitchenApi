@@ -1,5 +1,4 @@
-﻿using Kitchen.Application.UseCases;
-using Kitchen.Domain.Contracts.UseCases;
+﻿using Kitchen.Domain.Contracts.UseCases;
 using Kitchen.Domain.Entities;
 using Kitchen.Models.Category;
 using Microsoft.AspNetCore.Mvc;
@@ -66,6 +65,21 @@ namespace Kitchen.Controllers
             {
                 await _measurementUseCase.UpdateById(id, measurement);
                 return Ok();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal server error" + ex.Message);
+            }
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<FindMeasuresResponse>> GetAll(int page = 1, int pageSize = 10, string sortOrder = "asc")
+        {
+            try
+            {
+                var categories = await _measurementUseCase.LoadAll(page, pageSize, sortOrder);
+
+                return Ok(categories);
             }
             catch (Exception ex)
             {
