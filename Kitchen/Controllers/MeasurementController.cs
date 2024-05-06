@@ -1,21 +1,31 @@
-﻿using Kitchen.Domain.Contracts.UseCases;
+﻿using FluentValidation;
+using Kitchen.Domain.Contracts.UseCases;
 using Kitchen.Domain.Entities;
-using Kitchen.Models.Category;
+using Kitchen.Models.Error;
+using Kitchen.Models.Measure.Validation;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Kitchen.Controllers
 {
     [Route("api/v1/measurement")]
     [ApiController]
-    public class MeasurementController(IMeasurementUseCase measurementUseCase) : ControllerBase
+    public class MeasurementController(IMeasurementUseCase measurementUseCase, IValidator<MeasurementInput> validator) : ControllerBase
     {
         private readonly IMeasurementUseCase _measurementUseCase = measurementUseCase;
+        private readonly IValidator<MeasurementInput> _validator = validator;
 
         [HttpPost]
         public async Task<IActionResult> Add(MeasurementInput input)
         {
             try
             {
+                var validation = _validator.Validate(input);
+
+                if (!validation.IsValid)
+                {
+                    return BadRequest(validation.Errors.ToCustomValidationFailure());
+                }
+
                 var measurement = new Measurement(input.Name);
 
                 await _measurementUseCase.AddMeasurement(measurement);

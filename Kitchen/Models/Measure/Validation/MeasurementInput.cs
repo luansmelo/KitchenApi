@@ -1,4 +1,4 @@
-﻿namespace Kitchen.Models.Category
+﻿namespace Kitchen.Models.Measure.Validation
 {
     public class MeasurementInput
     {
