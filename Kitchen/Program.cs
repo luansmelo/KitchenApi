@@ -6,6 +6,7 @@ using Kitchen.Domain.Contracts.UseCases;
 using Kitchen.Infra.KitchenConnectionContext;
 using Kitchen.Infra.Repositories;
 using Kitchen.Models.Category.Validation;
+using Kitchen.Models.Measure.Validation;
 
 namespace Kitchen
 {
@@ -23,6 +24,7 @@ namespace Kitchen
             builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
             builder.Services.AddScoped<IMeasurementRepository, MeasurementRepository>();
             builder.Services.AddTransient<IValidator<CategoryInput>, CategoryInputValidation>();
+            builder.Services.AddTransient<IValidator<MeasurementInput>, MeasurementInputValidation>();
             builder.Services.AddPersistence(builder.Configuration);
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
