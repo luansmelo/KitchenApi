@@ -47,6 +47,7 @@ namespace Kitchen.Infra.Repositories
             return await _hotelDbContext
                 .Ingredient
                 .Include(i => i.GroupsOnIngredient)
+                .ThenInclude(g => g.Group)
                 .FirstOrDefaultAsync(x => x.Name == name);                 
         }
 

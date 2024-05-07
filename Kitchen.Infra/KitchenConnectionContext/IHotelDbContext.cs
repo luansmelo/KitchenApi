@@ -11,5 +11,6 @@ namespace Kitchen.Infra.KitchenConnectionContext
         DbSet<Group> Group { get; set; }
         DbSet<Ingredient> Ingredient { get; set; }
         DbSet<GroupsOnIngredient> GroupsOnIngredient { get; set; }
+        DbSet<Product> Product { get; set; }
     }
 }

@@ -24,10 +24,12 @@ namespace Kitchen
             builder.Services.AddScoped<IMeasurementUseCase, MearuementUseCase>();
             builder.Services.AddScoped<IGroupUseCase, GroupUseCase>();
             builder.Services.AddScoped<IIngredientUseCase, IngredientUseCase>();
+            builder.Services.AddScoped<IProductUseCase, ProductUseCase>();
             builder.Services.AddScoped<IGroupRepository, GroupRepository>();  
             builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
             builder.Services.AddScoped<IMeasurementRepository, MeasurementRepository>();
             builder.Services.AddScoped<IIngredientRepository, IngredientRepository>();
+            builder.Services.AddScoped<IProductRepository, ProductRepository>();
             builder.Services.AddTransient<IValidator<CategoryInput>, CategoryInputValidation>();
             builder.Services.AddTransient<IValidator<MeasurementInput>, MeasurementInputValidation>();
             builder.Services.AddTransient<IValidator<GroupInput>, GroupInputValidation>();
