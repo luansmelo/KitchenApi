@@ -47,25 +47,36 @@ namespace Kitchen.Application.UseCases
             await _ingredientRepository.AddIngredient(ingredient);
         }
 
-
         public async Task DeleteById(Guid id)
         {
-            return;
+            await GetById(id);
+
+            await _ingredientRepository.DeleteById(id);
         }
 
         public async Task<Ingredient> GetById(Guid id)
         {
-            return null;
+            var ingredient = await _ingredientRepository.GetById(id)
+                ?? throw new Exception("Ingredient não encontrado");
+            
+            return ingredient;
         }
 
         public async Task<FindIngredientsResponse> LoadAll(int page, int pageSize, string sortOrder)
         {
-            return null;
+            return await _ingredientRepository.LoadAll(page, pageSize, sortOrder);
         }
 
-        public async Task UpdateById(Guid id, Ingredient ingredient)
+        public async Task UpdateById(Guid id, IngredientInput input)
         {
-            return;
+            await GetById(id);
+
+            var ingredient = new Ingredient()
+            {
+
+            };
+
+            await _ingredientRepository.UpdateById(id, ingredient);
         }
     }
 }

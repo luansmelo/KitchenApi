@@ -2,7 +2,7 @@
 using Kitchen.Domain.Contracts.UseCases;
 using Kitchen.Domain.Entities;
 using Kitchen.Infra.KitchenConnectionContext;
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 
 namespace Kitchen.Infra.Repositories
 {
@@ -23,12 +23,20 @@ namespace Kitchen.Infra.Repositories
 
         public async Task DeleteById(Guid id)
         {
-            throw new NotImplementedException();
+            var ingredient = await GetById(id);
+
+            if (ingredient != null)
+            {
+                _hotelDbContext.Ingredient.Remove(ingredient);
+                await _hotelDbContext.SaveChangesAsync();
+            }
         }
 
         public async Task<Ingredient> GetById(Guid id)
         {
-            throw new NotImplementedException();
+            return await _hotelDbContext
+               .Ingredient
+               .FirstOrDefaultAsync(c => c.Id == id);
         }
 
         public async Task<Ingredient> GetByName(string name)
@@ -40,12 +48,44 @@ namespace Kitchen.Infra.Repositories
 
         public async Task<FindIngredientsResponse> LoadAll(int page, int pageSize, string sortOrder)
         {
-            throw new NotImplementedException();
+            var query = _hotelDbContext.Ingredient.AsQueryable();
+
+            var totalItems = await query.CountAsync();
+            var totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+
+            query = sortOrder.ToLower() == "desc" ? query
+                .OrderByDescending(c => c.Name)
+                : query.OrderBy(c => c.Name);
+
+            var ingredients = await query
+               .Skip((page - 1) * pageSize)
+               .Take(pageSize)
+               .ToListAsync();
+
+            return new FindIngredientsResponse
+            {
+                Ingredients = ingredients.Select(c => new Partial<Ingredient> { Id = c.Id, Name = c.Name }).ToList(),
+                TotalPages = totalPages,
+                TotalItems = totalItems
+            };
         }
 
         public async Task UpdateById(Guid id, Ingredient ingredient)
         {
-            throw new NotImplementedException();
+            var ingredientUpdate = await GetById(id);
+            if (ingredientUpdate != null)
+            {
+
+                ingredientUpdate.Name = ingredient.Name;
+                ingredientUpdate.UnitPrice = ingredient.UnitPrice;
+                ingredientUpdate.Code = ingredient.Code;
+                ingredientUpdate.MeasurementId = ingredient.MeasurementId;
+                ingredientUpdate.GroupsOnIngredient = ingredient.GroupsOnIngredient;
+
+                _hotelDbContext.Ingredient.Update(ingredientUpdate);
+
+                await _hotelDbContext.SaveChangesAsync();
+            }
         }
     }
 }

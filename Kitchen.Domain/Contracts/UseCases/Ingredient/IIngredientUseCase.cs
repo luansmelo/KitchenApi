@@ -8,7 +8,7 @@ namespace Kitchen.Domain.Contracts.UseCases
         Task AddIngredient(IngredientInput ingredient);
         Task<Ingredient> GetById(Guid id);
         Task DeleteById(Guid id);
-        Task UpdateById(Guid id, Ingredient ingredient);
+        Task UpdateById(Guid id, IngredientInput ingredient);
         Task<FindIngredientsResponse> LoadAll(int page, int pageSize, string sortOrder);
     }
 }
