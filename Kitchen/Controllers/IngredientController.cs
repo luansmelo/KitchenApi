@@ -1,6 +1,5 @@
-﻿using Kitchen.Domain.Contracts.UseCases;
-using Kitchen.Domain.Entities;
-using Kitchen.Models.Ingredient.Validation;
+﻿using Kitchen.Domain.Contracts;
+using Kitchen.Domain.Contracts.UseCases;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Kitchen.Controllers
@@ -27,7 +26,8 @@ namespace Kitchen.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Ingredient>> GetById(Guid id)
+        [ProducesResponseType(typeof(IngredientResponse), 200)]
+        public async Task<ActionResult<IngredientResponse>> GetById(Guid id)
         {
             try
             {

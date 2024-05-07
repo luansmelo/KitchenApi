@@ -1,5 +1,4 @@
-﻿using Kitchen.Domain.Contracts.UseCases;
-using Kitchen.Domain.Entities;
+﻿using Kitchen.Domain.Entities;
 
 namespace Kitchen.Domain.Contracts.Repositories
 {

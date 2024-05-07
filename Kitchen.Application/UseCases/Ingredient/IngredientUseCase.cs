@@ -1,7 +1,7 @@
-﻿using Kitchen.Domain.Contracts.Repositories;
+﻿using Kitchen.Domain.Contracts;
+using Kitchen.Domain.Contracts.Repositories;
 using Kitchen.Domain.Contracts.UseCases;
 using Kitchen.Domain.Entities;
-using Kitchen.Models.Ingredient.Validation;
 
 namespace Kitchen.Application.UseCases
 {
@@ -20,7 +20,7 @@ namespace Kitchen.Application.UseCases
             var measurement = await _measurementRepository.GetById(input.MeasurementId)
                 ?? throw new Exception("Unidade de medida não encontrada");
 
-            var ingredient = new Ingredient
+            var ingredient = new Domain.Entities.Ingredient.Ingredient()
             {
                 Name = input.Name,
                 Code = input.Code,
@@ -34,8 +34,8 @@ namespace Kitchen.Application.UseCases
                 var group = await _groupRepository.GetById(groupId);
                 if (group != null)
                 {
-                    ingredient.GroupsOnIngredient.Add(new GroupsOnIngredient 
-                        { GroupId = group.Id, IngredientId = ingredient.Id}
+                    ingredient.GroupsOnIngredient.Add(new GroupsOnIngredient
+                    { GroupId = group.Id, IngredientId = ingredient.Id }
                     );
                 }
                 else
@@ -54,12 +54,29 @@ namespace Kitchen.Application.UseCases
             await _ingredientRepository.DeleteById(id);
         }
 
-        public async Task<Ingredient> GetById(Guid id)
+        public async Task<IngredientResponse> GetById(Guid id)
         {
             var ingredient = await _ingredientRepository.GetById(id)
                 ?? throw new Exception("Ingredient não encontrado");
-            
-            return ingredient;
+
+            var groups = ingredient.GroupsOnIngredient
+             .Select(g => new GroupResponse
+             {
+                 Id = g.Id,
+                 Name = g.Group.Name
+             }).ToList();
+
+            var ingredientResponse = new IngredientResponse()
+            {
+                Id = ingredient.Id,
+                Name = ingredient.Name,
+                Code = ingredient.Code,
+                MeasurementId = ingredient.MeasurementId,
+                UnitPrice = ingredient.UnitPrice,
+                Groups = groups
+            };
+
+            return ingredientResponse;
         }
 
         public async Task<FindIngredientsResponse> LoadAll(int page, int pageSize, string sortOrder)
@@ -71,12 +88,7 @@ namespace Kitchen.Application.UseCases
         {
             await GetById(id);
 
-            var ingredient = new Ingredient()
-            {
-
-            };
-
-            await _ingredientRepository.UpdateById(id, ingredient);
+            await _ingredientRepository.UpdateById(id, input);
         }
     }
 }

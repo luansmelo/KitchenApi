@@ -6,6 +6,8 @@
 
         public ICollection<GroupsOnIngredient> GroupsOnIngredient { get; set; }
 
+        public Group() { }
+
         public Group(string name)
         {
             Name = name;

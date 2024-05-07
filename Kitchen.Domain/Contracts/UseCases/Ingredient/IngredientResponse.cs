@@ -1,6 +1,12 @@
 ﻿namespace Kitchen.Domain.Contracts.UseCases
 {
-    public class PartialIngredient<T>
+    public class GroupResponse
+    {
+        public Guid Id { get; set; }
+        public string Name { get; set; }
+    }
+
+    public class IngredientResponse
     {
         public Guid Id { get; set; } = Guid.Empty;
         public string Name { get; set; } = string.Empty;
@@ -9,12 +15,4 @@
         public Guid MeasurementId { get; set; }
         public List<GroupResponse> Groups { get; set; }
     }
-
-    public class FindIngredientsResponse
-    {
-        public required List<PartialIngredient<IngredientResponse>> Ingredients { get; set; }
-        public int TotalPages { get; set; }
-        public int TotalItems { get; set; }
-    }
-
 }

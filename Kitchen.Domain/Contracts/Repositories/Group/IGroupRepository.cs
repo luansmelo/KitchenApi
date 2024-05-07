@@ -7,6 +7,7 @@ namespace Kitchen.Domain.Contracts.Repositories
     {
         Task AddGroup(Group group);
         Task<Group> GetById(Guid id);
+        Task<List<Group>> GetByIds(List<Guid> groupIds);
         Task<Group> GetByName(string name);
         Task DeleteById(Guid id);
         Task UpdateById(Guid id, Group category);

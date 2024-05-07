@@ -1,4 +1,5 @@
 ﻿using Kitchen.Domain.Entities;
+using Kitchen.Domain.Entities.Ingredient;
 using Microsoft.EntityFrameworkCore;
 
 namespace Kitchen.Infra.KitchenConnectionContext

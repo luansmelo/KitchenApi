@@ -38,6 +38,13 @@ namespace Kitchen.Infra.Repositories
                 .FirstOrDefaultAsync(c => c.Id == id);
         }
 
+        public async Task<List<Group>> GetByIds(List<Guid> groupIds)
+        {
+            return await _hotelDbContext.Group
+                .Where(g => groupIds.Contains(g.Id))
+                .ToListAsync();
+        }
+
         public async Task<Group> GetByName(string name)
         {
             return await _hotelDbContext

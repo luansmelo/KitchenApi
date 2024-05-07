@@ -10,8 +10,4 @@
     <ProjectReference Include="..\Kitchen.Domain\Kitchen.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Models\Ingredient\Validation\" />
-  </ItemGroup>
-
 </Project>
