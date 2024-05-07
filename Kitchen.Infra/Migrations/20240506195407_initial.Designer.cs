@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Kitchen.Infra.KitchenConnectionContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -12,9 +13,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Kitchen.Infra.Migrations
 {
     [DbContext(typeof(HotelDbContext))]
-    partial class HotelDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240506195407_initial")]
+    partial class initial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -35,7 +38,7 @@ namespace Kitchen.Infra.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Category", (string)null);
+                    b.ToTable("Category");
                 });
 
             modelBuilder.Entity("Kitchen.Domain.Entities.Group", b =>
@@ -50,7 +53,7 @@ namespace Kitchen.Infra.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Group", (string)null);
+                    b.ToTable("Group");
                 });
 
             modelBuilder.Entity("Kitchen.Domain.Entities.GroupsOnInputs", b =>
@@ -79,7 +82,7 @@ namespace Kitchen.Infra.Migrations
 
                     b.HasIndex("IngredientId1");
 
-                    b.ToTable("GroupsOnInputs", (string)null);
+                    b.ToTable("GroupsOnInputs");
                 });
 
             modelBuilder.Entity("Kitchen.Domain.Entities.Ingredient", b =>
@@ -114,7 +117,7 @@ namespace Kitchen.Infra.Migrations
 
                     b.HasIndex("MeasurementId1");
 
-                    b.ToTable("Ingredient", (string)null);
+                    b.ToTable("Ingredient");
                 });
 
             modelBuilder.Entity("Kitchen.Domain.Entities.Measurement", b =>
@@ -129,7 +132,7 @@ namespace Kitchen.Infra.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Measurement", (string)null);
+                    b.ToTable("Measurement");
                 });
 
             modelBuilder.Entity("Kitchen.Domain.Entities.GroupsOnInputs", b =>

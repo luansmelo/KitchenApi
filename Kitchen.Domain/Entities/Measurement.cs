@@ -1,16 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-
-namespace Kitchen.Domain.Entities
+﻿namespace Kitchen.Domain.Entities
 {
-    [Table("measurement")]
-    public class Measurement
+    public class Measurement : BaseEntity
     {
-        [Key]
-        public Guid Id { get; private set; }
+        public string? Name { get; set; }
 
-        [Required(ErrorMessage = "Name is required")]
-        public string Name { get; set; }
+        public Measurement() { }
 
         public Measurement(string name)
         {

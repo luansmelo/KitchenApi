@@ -8,5 +8,7 @@ namespace Kitchen.Infra.KitchenConnectionContext
         DbSet<Category> Category { get; set; }
         DbSet<Measurement> Measurement { get; set; }
         DbSet<Group> Group { get; set; }
+        DbSet<Ingredient> Ingredient { get; set; }
+        DbSet<GroupsOnIngredient> GroupsOnIngredient { get; set; }
     }
 }

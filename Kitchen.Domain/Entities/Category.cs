@@ -1,15 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
-
-namespace Kitchen.Domain.Entities
+﻿namespace Kitchen.Domain.Entities
 {
-    [Table("category")]
-    public class Category
+    public class Category : BaseEntity
     {
-        [Key]
-        public Guid Id { get; private set; }
-
-        [Required(ErrorMessage = "Name is required")]
         public string Name { get; set; }
 
         public Category(string name)

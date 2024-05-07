@@ -1,16 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-
-namespace Kitchen.Domain.Entities
+﻿namespace Kitchen.Domain.Entities
 {
-    [Table("group")]
-    public class Group
+    public class Group : BaseEntity
     {
-        [Key]
-        public Guid Id { get; private set; }
-
-        [Required(ErrorMessage = "Name is required")]
         public string Name { get; set; }
+
+        public ICollection<GroupsOnIngredient> GroupsOnIngredient { get; set; }
 
         public Group(string name)
         {
