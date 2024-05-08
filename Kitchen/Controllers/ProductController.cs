@@ -1,5 +1,4 @@
 ﻿using Kitchen.Domain.Contracts.UseCases;
-using Kitchen.Domain.Contracts.UseCases.Product;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Kitchen.Controllers

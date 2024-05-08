@@ -1,6 +1,5 @@
 ﻿using Kitchen.Domain.Contracts.Repositories;
 using Kitchen.Domain.Contracts.UseCases;
-using Kitchen.Domain.Contracts.UseCases.Product;
 using Kitchen.Domain.Entities;
 
 namespace Kitchen.Application.UseCases
@@ -73,20 +72,15 @@ namespace Kitchen.Application.UseCases
             return productResponse;
         }
 
-
-        public Task<ProductResponse> GetByName(string name)
-        {
-            throw new NotImplementedException();
-        }
-
         public Task<FindProductResponse> LoadAll(int page, int pageSize, string sortOrder)
         {
             throw new NotImplementedException();
         }
 
-        public Task RemoveInputToProduct()
+        public async Task RemoveInputToProduct(RemoveInputToProduct product)
         {
-            throw new NotImplementedException();
+            await GetById(product.ProductId);
+            await _productRepository.RemoveInputToProduct(product);
         }
 
         public Task UpdateById(Guid id, ProductInput product)

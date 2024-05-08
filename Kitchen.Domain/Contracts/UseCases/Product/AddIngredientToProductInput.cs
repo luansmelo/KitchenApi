@@ -1,5 +1,5 @@
 ﻿
-namespace Kitchen.Domain.Contracts.UseCases.Product
+namespace Kitchen.Domain.Contracts.UseCases
 {
     public class IngredientAddProduct
     {

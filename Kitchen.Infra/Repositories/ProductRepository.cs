@@ -1,5 +1,5 @@
 ﻿using Kitchen.Domain.Contracts.Repositories;
-using Kitchen.Domain.Contracts.UseCases.Product;
+using Kitchen.Domain.Contracts.UseCases;
 using Kitchen.Domain.Entities;
 using Kitchen.Infra.KitchenConnectionContext;
 using Microsoft.EntityFrameworkCore;
@@ -72,13 +72,10 @@ namespace Kitchen.Infra.Repositories
                 .FirstOrDefaultAsync(c => c.Id == id);
         }
 
-
         public async Task<Product> GetByName(string name)
         {
             return await _hotelDbContext
                 .Product
-                .Include(product => product.IngredientsOnProduct)
-                .ThenInclude(g => g.Ingredient)
                 .FirstOrDefaultAsync(c => c.Name == name);
         }
 
@@ -87,9 +84,17 @@ namespace Kitchen.Infra.Repositories
             throw new NotImplementedException();
         }
 
-        public Task RemoveInputToProduct()
+        public async Task RemoveInputToProduct(RemoveInputToProduct product)
         {
-            throw new NotImplementedException();
+            var ingredient = await _hotelDbContext
+                .IngredientsOnProduct
+                .FirstOrDefaultAsync(i => i.ProductId == product.ProductId && i.IngredientId == product.IngredientId);
+
+            if (ingredient != null)
+            {
+                _hotelDbContext.IngredientsOnProduct.Remove(ingredient);
+                await _hotelDbContext.SaveChangesAsync();
+            }
         }
 
         public Task UpdateById(Guid id, Product product)
