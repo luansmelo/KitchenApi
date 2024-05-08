@@ -4,10 +4,10 @@ namespace Kitchen.Domain.Contracts.UseCases
 {
     public interface IMeasurementUseCase
     {
-        Task AddMeasurement(Measurement category);
+        Task AddMeasurement(Measurement measurement);
         Task<Measurement> GetById(Guid id);
         Task DeleteById(Guid id);
-        Task UpdateById(Guid id, Measurement category);
+        Task UpdateById(Guid id, Measurement measurement);
         Task<FindMeasuresResponse> LoadAll(int page, int pageSize, string sortOrder);
     }
 }

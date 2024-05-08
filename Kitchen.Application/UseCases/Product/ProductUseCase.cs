@@ -37,24 +37,26 @@ namespace Kitchen.Application.UseCases
 
         public async Task<ProductResponse> GetById(Guid id)
         {
-            var product = await _productRepository.GetById(id) 
+            var product = await _productRepository.GetById(id)
                 ?? throw new Exception("Produto não encontrado");
-
-            var groups = product.IngredientsOnProduct.Select(g => new GroupResponse()
-            {
-                Id = g.Id,
-                Name = g.Measurement,
-            }).ToList();
 
             var ingredients = product.IngredientsOnProduct.Select(i => new IngredientResponse()
             {
-                Id = i.Id,
+                Id = i.Ingredient.Id,
                 Name = i.Ingredient.Name,
                 Code = i.Ingredient.Code,
                 UnitPrice = i.Ingredient.UnitPrice,
-                Measurement = i.Ingredient.Measurement,
+                Measurement = new Measurement()
+                {
+                    Id = i.Ingredient.Measurement.Id,
+                    Name = i.Measurement,
+                },
                 Grammage = i.Grammage,
-                Groups = groups,
+                Groups = i.Ingredient.GroupsOnIngredient.Select(g => new GroupResponse()
+                {
+                    Id = g.Group.Id,
+                    Name = g.Group.Name,
+                }).ToList(),
             }).ToList();
 
             var productResponse = new ProductResponse
@@ -70,6 +72,7 @@ namespace Kitchen.Application.UseCases
 
             return productResponse;
         }
+
 
         public Task<ProductResponse> GetByName(string name)
         {

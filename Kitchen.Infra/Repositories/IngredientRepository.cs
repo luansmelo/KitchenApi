@@ -38,7 +38,7 @@ namespace Kitchen.Infra.Repositories
             return await _hotelDbContext
                .Ingredient
                .Include(i => i.GroupsOnIngredient)
-               .ThenInclude(g => g.Group)
+               .ThenInclude(g => g.Group)           
                .Include(m => m.Measurement)
                .FirstOrDefaultAsync(c => c.Id == id);
         }
@@ -78,7 +78,11 @@ namespace Kitchen.Infra.Repositories
                     Id = c.Id,
                     Name = c.Name,
                     Code = c.Code,
-                    Measurement = c.Measurement,
+                    Measurement = new Measurement()
+                    {
+                        Id = c.Measurement.Id,
+                        Name = c.Measurement.Name
+                    },
                     UnitPrice = c.UnitPrice,
                     Groups = c.GroupsOnIngredient
                     .Select(g => new GroupResponse

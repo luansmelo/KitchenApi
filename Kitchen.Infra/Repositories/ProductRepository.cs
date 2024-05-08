@@ -64,8 +64,14 @@ namespace Kitchen.Infra.Repositories
                 .Product
                 .Include(product => product.IngredientsOnProduct)
                 .ThenInclude(g => g.Ingredient)
+                .ThenInclude(ingredient => ingredient.Measurement)
+                .Include(product => product.IngredientsOnProduct)
+                .ThenInclude(g => g.Ingredient)
+                .ThenInclude(ingredient => ingredient.GroupsOnIngredient)
+                .ThenInclude(groupOnIngredient => groupOnIngredient.Group)
                 .FirstOrDefaultAsync(c => c.Id == id);
         }
+
 
         public async Task<Product> GetByName(string name)
         {
