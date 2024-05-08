@@ -6,7 +6,7 @@ namespace Kitchen.Domain.Contracts.UseCases
         Task AddProduct(ProductInput product);
         Task<ProductResponse> GetById(Guid id);
         Task DeleteById(Guid id);
-        Task UpdateById(Guid id, ProductInput product);
+        Task UpdateById(Guid id, UpdateProduct product);
         Task<FindProductResponse> LoadAll(int page, int pageSize, string sortOrder);
         Task AddInputToProduct(AddIngredientToProductInput product);
         Task RemoveInputToProduct(RemoveInputToProduct product);

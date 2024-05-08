@@ -83,9 +83,10 @@ namespace Kitchen.Application.UseCases
             await _productRepository.RemoveInputToProduct(product);
         }
 
-        public Task UpdateById(Guid id, ProductInput product)
+        public async Task UpdateById(Guid id, UpdateProduct product)
         {
-            throw new NotImplementedException();
+            await GetById(id);
+            await _productRepository.UpdateById(id, product);
         }
     }
 }

@@ -151,9 +151,33 @@ namespace Kitchen.Infra.Repositories
             }
         }
 
-        public Task UpdateById(Guid id, Product product)
+        public async Task UpdateById(Guid id, UpdateProduct input)
         {
-            throw new NotImplementedException();
+            var existingProduct = await GetById(id) ?? throw new Exception("Produto não encontrado");
+
+            existingProduct.Name = !string.IsNullOrEmpty(input.Name) ? input.Name : existingProduct.Name;
+            existingProduct.Description = !string.IsNullOrEmpty(input.Description) ? input.Description : existingProduct.Description;
+            existingProduct.Accession = input.Accession != 0 ? input.Accession : existingProduct.Accession;
+            existingProduct.PreparationTime = !string.IsNullOrEmpty(input.PreparationTime) ? input.PreparationTime : existingProduct.PreparationTime;
+            existingProduct.Resource = !string.IsNullOrEmpty(input.Resource) ? input.Resource : existingProduct.Resource;
+
+            foreach (var ingredientInput in input.Ingredients)
+            {
+                var existingIngredient = existingProduct
+                            .IngredientsOnProduct
+                            .FirstOrDefault(iop => 
+                            iop.IngredientId == ingredientInput.IngredientId && iop.ProductId == id);
+
+                if (existingIngredient != null)
+                {
+                    existingIngredient.Measurement = ingredientInput.MeasurementName;
+                    existingIngredient.Grammage = ingredientInput.Grammage;
+                }
+            }
+            
+            _hotelDbContext.Update(existingProduct);
+
+            await _hotelDbContext.SaveChangesAsync();
         }
     }
 }

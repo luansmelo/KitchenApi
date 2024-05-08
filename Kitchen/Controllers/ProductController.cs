@@ -98,5 +98,19 @@ namespace Kitchen.Controllers
                 return StatusCode(500, "Internal server error" + ex.Message);
             }
         }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateById(Guid id, UpdateProduct product)
+        {
+            try
+            {
+                await _productUseCase.UpdateById(id, product);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal server error" + ex.Message);
+            }
+        }
     }
 }
