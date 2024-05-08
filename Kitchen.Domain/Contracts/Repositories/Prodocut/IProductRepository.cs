@@ -1,4 +1,5 @@
-﻿using Kitchen.Domain.Entities;
+﻿using Kitchen.Domain.Contracts.UseCases.Product;
+using Kitchen.Domain.Entities;
 
 namespace Kitchen.Domain.Contracts.Repositories
 {
@@ -10,7 +11,7 @@ namespace Kitchen.Domain.Contracts.Repositories
         Task DeleteById(Guid id);
         Task UpdateById(Guid id, Product product);
         Task<FindProductResponse> LoadAll(int page, int pageSize, string sortOrder);
-        Task AddInputToProduct();
+        Task AddInputToProduct(AddIngredientToProductInput product);
         Task RemoveInputToProduct();
     }
 }

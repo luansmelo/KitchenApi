@@ -1,5 +1,6 @@
 ﻿using Kitchen.Domain.Contracts.Repositories;
 using Kitchen.Domain.Contracts.UseCases;
+using Kitchen.Domain.Contracts.UseCases.Product;
 using Kitchen.Domain.Entities;
 
 namespace Kitchen.Application.UseCases
@@ -8,9 +9,9 @@ namespace Kitchen.Application.UseCases
     {
 
         private readonly IProductRepository _productRepository = productRepository;
-        public Task AddInputToProduct()
+        public async Task AddInputToProduct(AddIngredientToProductInput product)
         {
-            throw new NotImplementedException();
+            await _productRepository.AddInputToProduct(product);
         }
 
         public async Task AddProduct(ProductInput input)

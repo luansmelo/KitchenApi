@@ -1,4 +1,5 @@
 ﻿using Kitchen.Domain.Contracts.UseCases;
+using Kitchen.Domain.Contracts.UseCases.Product;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Kitchen.Controllers
@@ -15,6 +16,21 @@ namespace Kitchen.Controllers
             try
             {
                 await _productUseCase.AddProduct(input);
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal server error" + ex.Message);
+            }
+        }
+
+        [HttpPost("add/input")]
+        public async Task<IActionResult> AddInput(AddIngredientToProductInput input)
+        {
+            try
+            {
+                await _productUseCase.AddInputToProduct(input);
 
                 return Ok();
             }

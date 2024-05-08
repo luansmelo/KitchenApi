@@ -1,4 +1,6 @@
 ﻿using Kitchen.Domain.Contracts.Repositories;
+using Kitchen.Domain.Contracts.UseCases;
+using Kitchen.Domain.Contracts.UseCases.Product;
 using Kitchen.Domain.Entities;
 using Kitchen.Infra.KitchenConnectionContext;
 using Microsoft.EntityFrameworkCore;
@@ -14,9 +16,30 @@ namespace Kitchen.Infra.Repositories
             _hotelDbContext = hotelDbContext;
         }
 
-        public Task AddInputToProduct()
+        public async Task AddInputToProduct(AddIngredientToProductInput product)
         {
-            throw new NotImplementedException();
+            var productEntity = await _hotelDbContext.Product.FindAsync(product.ProductId);
+
+            if (productEntity != null)
+            { 
+                foreach (var ingredient in product.Ingredients)
+                {
+                    var ingredientEntity = await _hotelDbContext.Ingredient.FindAsync(ingredient.IngredientId);
+                    if (ingredientEntity != null)
+                    {
+                        var inputAddToProduct = new IngredientOnProducts
+                        {
+                            Ingredient = ingredientEntity,
+                            Measurement = ingredient.MeasurementName,
+                            Grammage = ingredient.Grammage
+                        };
+
+                        await _hotelDbContext.IngredientOnProducts.AddAsync(inputAddToProduct);
+                    }
+                }
+
+                await _hotelDbContext.SaveChangesAsync();
+            }
         }
 
         public async Task AddProduct(Product product)
@@ -58,7 +81,7 @@ namespace Kitchen.Infra.Repositories
             throw new NotImplementedException();
         }
 
-        public Task UpdateById(Guid id, Product category)
+        public Task UpdateById(Guid id, Product product)
         {
             throw new NotImplementedException();
         }
