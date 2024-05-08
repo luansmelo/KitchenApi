@@ -18,24 +18,22 @@ namespace Kitchen.Infra.Repositories
 
         public async Task AddInputToProduct(AddIngredientToProductInput product)
         {
-            var productEntity = await _hotelDbContext.Product.FindAsync(product.ProductId);
+            var productEntity = await GetById(product.ProductId);
 
             if (productEntity != null)
-            { 
-                foreach (var ingredient in product.Ingredients)
+            {
+                
+                foreach (var ingredient in product.Ingredient)
                 {
-                    var ingredientEntity = await _hotelDbContext.Ingredient.FindAsync(ingredient.IngredientId);
-                    if (ingredientEntity != null)
+                    var inputAddToProduct = new IngredientOnProducts
                     {
-                        var inputAddToProduct = new IngredientOnProducts
-                        {
-                            Ingredient = ingredientEntity,
-                            Measurement = ingredient.MeasurementName,
-                            Grammage = ingredient.Grammage
-                        };
+                        IngredientId = ingredient.IngredientId,
+                        Measurement = ingredient.MeasurementName,
+                        Grammage = ingredient.Grammage
+                    };
 
-                        await _hotelDbContext.IngredientOnProducts.AddAsync(inputAddToProduct);
-                    }
+                    await _hotelDbContext.IngredientOnProducts.AddAsync(inputAddToProduct);
+                    
                 }
 
                 await _hotelDbContext.SaveChangesAsync();

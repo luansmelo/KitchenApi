@@ -11,6 +11,7 @@ namespace Kitchen.Application.UseCases
         private readonly IProductRepository _productRepository = productRepository;
         public async Task AddInputToProduct(AddIngredientToProductInput product)
         {
+            await GetById(product.ProductId);
             await _productRepository.AddInputToProduct(product);
         }
 

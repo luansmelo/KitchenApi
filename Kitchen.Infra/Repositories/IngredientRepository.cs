@@ -110,14 +110,6 @@ namespace Kitchen.Infra.Repositories
                     ingredientUpdate.UnitPrice = Convert.ToDecimal(input.UnitPrice);
                 }
 
-                if (ingredientUpdate.GroupsOnIngredient != null)
-                {
-                    foreach (var group in ingredientUpdate.GroupsOnIngredient)
-                    {
-                        Console.WriteLine($"GroupId: {group.GroupId}");
-                    }
-                }
-
                 if (input.GroupIds != null && input.GroupIds.Any())
                 {
                     var existingGroupIds = ingredientUpdate.GroupsOnIngredient.Select(g => g.GroupId).ToList();

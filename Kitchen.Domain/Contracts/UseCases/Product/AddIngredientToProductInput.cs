@@ -10,6 +10,6 @@ namespace Kitchen.Domain.Contracts.UseCases.Product
     public class AddIngredientToProductInput
     {
         public Guid ProductId { get; set; } = Guid.Empty;
-        public List<IngredientAddProduct> Ingredients { get; set; } = [];
+        public List<IngredientAddProduct> Ingredient { get; set; } = [];
     }
 }
