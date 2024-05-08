@@ -29,9 +29,10 @@ namespace Kitchen.Application.UseCases
             await _productRepository.AddProduct(product);
         }
 
-        public Task DeleteById(Guid id)
+        public async Task DeleteById(Guid id)
         {
-            throw new NotImplementedException();
+            await GetById(id);
+            await _productRepository.DeleteById(id);
         }
 
         public async Task<ProductResponse> GetById(Guid id)
@@ -39,18 +40,19 @@ namespace Kitchen.Application.UseCases
             var product = await _productRepository.GetById(id) 
                 ?? throw new Exception("Produto não encontrado");
 
-            var groups = product.IngredientOnProducts.Select(g => new GroupResponse()
+            var groups = product.IngredientsOnProduct.Select(g => new GroupResponse()
             {
                 Id = g.Id,
                 Name = g.Measurement,
             }).ToList();
 
-            var ingredients = product.IngredientOnProducts.Select(i => new IngredientResponse()
+            var ingredients = product.IngredientsOnProduct.Select(i => new IngredientResponse()
             {
                 Id = i.Id,
                 Name = i.Ingredient.Name,
                 Code = i.Ingredient.Code,
                 UnitPrice = i.Ingredient.UnitPrice,
+                Measurement = i.Ingredient.Measurement,
                 Grammage = i.Grammage,
                 Groups = groups,
             }).ToList();

@@ -1,5 +1,4 @@
 ﻿using Kitchen.Domain.Contracts.Repositories;
-using Kitchen.Domain.Contracts.UseCases;
 using Kitchen.Domain.Contracts.UseCases.Product;
 using Kitchen.Domain.Entities;
 using Kitchen.Infra.KitchenConnectionContext;
@@ -22,22 +21,25 @@ namespace Kitchen.Infra.Repositories
 
             if (productEntity != null)
             {
-                
-                foreach (var ingredient in product.Ingredient)
+                foreach (var ingredient in product.Ingredients)
                 {
-                    var inputAddToProduct = new IngredientOnProducts
+                    var existingIngredient = await _hotelDbContext.Ingredient.FindAsync(ingredient.IngredientId);
+
+                    if (existingIngredient != null)
                     {
-                        IngredientId = ingredient.IngredientId,
-                        Measurement = ingredient.MeasurementName,
-                        Grammage = ingredient.Grammage
-                    };
+                        var inputAddToProduct = new IngredientsOnProduct
+                        {
+                            ProductId = productEntity.Id,
+                            IngredientId = ingredient.IngredientId,
+                            Measurement = ingredient.MeasurementName,
+                            Grammage = ingredient.Grammage
+                        };
 
-                    await _hotelDbContext.IngredientOnProducts.AddAsync(inputAddToProduct);
-                    
+                        await _hotelDbContext.IngredientsOnProduct.AddAsync(inputAddToProduct);
+                    }                
                 }
-
-                await _hotelDbContext.SaveChangesAsync();
             }
+            await _hotelDbContext.SaveChangesAsync();
         }
 
         public async Task AddProduct(Product product)
@@ -46,16 +48,21 @@ namespace Kitchen.Infra.Repositories
             await _hotelDbContext.SaveChangesAsync();
         }
 
-        public Task DeleteById(Guid id)
+        public async Task DeleteById(Guid id)
         {
-            throw new NotImplementedException();
+            var product = await GetById(id);
+            if (product != null)
+            {
+                _hotelDbContext.Product.Remove(product);
+                await _hotelDbContext.SaveChangesAsync();
+            }
         }
 
         public async Task<Product> GetById(Guid id)
         {
             return await _hotelDbContext
                 .Product
-                .Include(product => product.IngredientOnProducts)
+                .Include(product => product.IngredientsOnProduct)
                 .ThenInclude(g => g.Ingredient)
                 .FirstOrDefaultAsync(c => c.Id == id);
         }
@@ -64,7 +71,7 @@ namespace Kitchen.Infra.Repositories
         {
             return await _hotelDbContext
                 .Product
-                .Include(product => product.IngredientOnProducts)
+                .Include(product => product.IngredientsOnProduct)
                 .ThenInclude(g => g.Ingredient)
                 .FirstOrDefaultAsync(c => c.Name == name);
         }

@@ -40,6 +40,21 @@ namespace Kitchen.Controllers
             }
         }
 
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteById(Guid id)
+        {
+            try
+            {
+                await _productUseCase.DeleteById(id);
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal server error" + ex.Message);
+            }
+        }
+
         [HttpGet("{id}")]
         public async Task<ActionResult<ProductResponse>> GetById(Guid id)
         {

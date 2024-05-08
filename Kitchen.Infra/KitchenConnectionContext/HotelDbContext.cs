@@ -19,7 +19,7 @@ namespace Kitchen.Infra.KitchenConnectionContext
         public DbSet<Ingredient> Ingredient { get; set; }
         public DbSet<GroupsOnIngredient> GroupsOnIngredient { get; set; }
         public DbSet<Product> Product { get; set; }
-        public DbSet<IngredientOnProducts> IngredientOnProducts { get; set; }
+        public DbSet<IngredientsOnProduct> IngredientsOnProduct { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

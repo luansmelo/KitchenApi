@@ -9,6 +9,6 @@
         public string PreparationTime { get; set; } = string.Empty;
         public string? Photo_url { get; set; } = string.Empty;
         public string Status {  get; set; } = string.Empty;
-        public ICollection<IngredientOnProducts> IngredientOnProducts { get; set; } = [];
+        public ICollection<IngredientsOnProduct> IngredientsOnProduct { get; set; } = [];
     }
 }
