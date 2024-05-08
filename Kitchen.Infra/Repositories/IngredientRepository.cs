@@ -39,6 +39,7 @@ namespace Kitchen.Infra.Repositories
                .Ingredient
                .Include(i => i.GroupsOnIngredient)
                .ThenInclude(g => g.Group)
+               .Include(m => m.Measurement)
                .FirstOrDefaultAsync(c => c.Id == id);
         }
 
@@ -48,6 +49,7 @@ namespace Kitchen.Infra.Repositories
                 .Ingredient
                 .Include(i => i.GroupsOnIngredient)
                 .ThenInclude(g => g.Group)
+                .Include(m => m.Measurement)
                 .FirstOrDefaultAsync(x => x.Name == name);                 
         }
 
@@ -76,7 +78,7 @@ namespace Kitchen.Infra.Repositories
                     Id = c.Id,
                     Name = c.Name,
                     Code = c.Code,
-                    MeasurementId = c.MeasurementId,
+                    Measurement = c.Measurement,
                     UnitPrice = c.UnitPrice,
                     Groups = c.GroupsOnIngredient
                     .Select(g => new GroupResponse

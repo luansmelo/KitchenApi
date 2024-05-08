@@ -71,8 +71,8 @@ namespace Kitchen.Application.UseCases
                 Id = ingredient.Id,
                 Name = ingredient.Name,
                 Code = ingredient.Code,
-                MeasurementId = ingredient.MeasurementId,
                 UnitPrice = ingredient.UnitPrice,
+                Measurement = ingredient.Measurement,
                 Groups = groups
             };
 

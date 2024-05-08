@@ -7,6 +7,6 @@
         public Guid ProductId { get; set; } = Guid.Empty;
         public Product Product { get; set; } = new Product();
         public string Measurement { get; set; } = string.Empty;
-        public decimal Grammager { get; set; } = decimal.Zero;
+        public decimal Grammage { get; set; } = decimal.Zero;
     }
 }

@@ -32,12 +32,42 @@ namespace Kitchen.Application.UseCases
             throw new NotImplementedException();
         }
 
-        public Task<Product> GetById(Guid id)
+        public async Task<ProductResponse> GetById(Guid id)
         {
-            throw new NotImplementedException();
+            var product = await _productRepository.GetById(id) 
+                ?? throw new Exception("Produto não encontrado");
+
+            var groups = product.IngredientOnProducts.Select(g => new GroupResponse()
+            {
+                Id = g.Id,
+                Name = g.Measurement,
+            }).ToList();
+
+            var ingredients = product.IngredientOnProducts.Select(i => new IngredientResponse()
+            {
+                Id = i.Id,
+                Name = i.Ingredient.Name,
+                Code = i.Ingredient.Code,
+                UnitPrice = i.Ingredient.UnitPrice,
+                Grammage = i.Grammage,
+                Groups = groups,
+            }).ToList();
+
+            var productResponse = new ProductResponse
+            {
+                Id = product.Id,
+                Name = product.Name,
+                Description = product.Description,
+                Accession = product.Accession,
+                PreparationTime = product.PreparationTime,
+                Resource = product.Resource,
+                Ingredients = ingredients,
+            };
+
+            return productResponse;
         }
 
-        public Task<Product> GetByName(string name)
+        public Task<ProductResponse> GetByName(string name)
         {
             throw new NotImplementedException();
         }

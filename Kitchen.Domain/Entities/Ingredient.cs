@@ -8,5 +8,6 @@
         public decimal UnitPrice { get; set; }
         public ICollection<GroupsOnIngredient> GroupsOnIngredient { get; set; } = [];
         public ICollection<IngredientOnProducts> IngredientOnProducts { get; set; } = [];
+        public Measurement Measurement { get; set; } = new Measurement();
     }
 }

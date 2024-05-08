@@ -23,5 +23,20 @@ namespace Kitchen.Controllers
                 return StatusCode(500, "Internal server error" + ex.Message);
             }
         }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<ProductResponse>> GetById(Guid id)
+        {
+            try
+            {
+                var product = await _productUseCase.GetById(id);
+
+                return Ok(product);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal server error" + ex.Message);
+            }
+        }
     }
 }

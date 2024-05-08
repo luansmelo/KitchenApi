@@ -1,6 +1,7 @@
 ﻿using Kitchen.Domain.Contracts.Repositories;
 using Kitchen.Domain.Entities;
 using Kitchen.Infra.KitchenConnectionContext;
+using Microsoft.EntityFrameworkCore;
 
 namespace Kitchen.Infra.Repositories
 {
@@ -29,14 +30,22 @@ namespace Kitchen.Infra.Repositories
             throw new NotImplementedException();
         }
 
-        public Task<Product> GetById(Guid id)
+        public async Task<Product> GetById(Guid id)
         {
-            throw new NotImplementedException();
+            return await _hotelDbContext
+                .Product
+                .Include(product => product.IngredientOnProducts)
+                .ThenInclude(g => g.Ingredient)
+                .FirstOrDefaultAsync(c => c.Id == id);
         }
 
-        public Task<Product> GetByName(string name)
+        public async Task<Product> GetByName(string name)
         {
-            throw new NotImplementedException();
+            return await _hotelDbContext
+                .Product
+                .Include(product => product.IngredientOnProducts)
+                .ThenInclude(g => g.Ingredient)
+                .FirstOrDefaultAsync(c => c.Name == name);
         }
 
         public Task<FindProductResponse> LoadAll(int page, int pageSize, string sortOrder)

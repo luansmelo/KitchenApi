@@ -1,4 +1,6 @@
-﻿namespace Kitchen.Domain.Contracts.UseCases
+﻿using Kitchen.Domain.Entities;
+
+namespace Kitchen.Domain.Contracts.UseCases
 {
     public class PartialIngredient<T>
     {
@@ -6,7 +8,7 @@
         public string Name { get; set; } = string.Empty;
         public string Code { get; set; } = string.Empty;
         public decimal UnitPrice { get; set; } = decimal.Zero;
-        public Guid MeasurementId { get; set; }
+        public Measurement Measurement { get; set; }
         public List<GroupResponse> Groups { get; set; }
     }
 
