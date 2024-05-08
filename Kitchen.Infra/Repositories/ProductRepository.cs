@@ -79,9 +79,63 @@ namespace Kitchen.Infra.Repositories
                 .FirstOrDefaultAsync(c => c.Name == name);
         }
 
-        public Task<FindProductResponse> LoadAll(int page, int pageSize, string sortOrder)
+        public async Task<FindProductResponse> LoadAll(int page, int pageSize, string sortOrder)
         {
-            throw new NotImplementedException();
+            var query = _hotelDbContext.Product.AsQueryable();
+
+            var totalItems = await query.CountAsync();
+            var totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+
+            query = sortOrder.ToLower() == "desc" ? query.OrderByDescending(c => c.Name) : query.OrderBy(c => c.Name);
+
+            var products = await query
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .Include(p => p.IngredientsOnProduct)
+                .ThenInclude(iop => iop.Ingredient)
+                .ThenInclude(ingredient => ingredient.Measurement)
+                .Include(p => p.IngredientsOnProduct)
+                .ThenInclude(iop => iop.Ingredient)
+                .ThenInclude(ingredient => ingredient.GroupsOnIngredient)
+                .ThenInclude(groupOnIngredient => groupOnIngredient.Group)
+                .ToListAsync();
+
+            var productResponses = products.Select(product => new ProductResponse
+            {
+                Id = product.Id,
+                Name = product.Name,
+                Accession = product.Accession,
+                Description = product.Description,
+                PreparationTime = product.PreparationTime,
+                Resource = product.Resource,
+                Photo_url = product.Photo_url,
+                Status = product.Status,
+                Ingredients = product.IngredientsOnProduct.Select(iop => new IngredientResponse
+                {
+                    Id = iop.Ingredient.Id,
+                    Name = iop.Ingredient.Name,
+                    Code = iop.Ingredient.Code,
+                    Grammage = iop.Grammage,
+                    UnitPrice = iop.Ingredient.UnitPrice,
+                    Measurement = new Measurement
+                    {
+                        Id = iop.Ingredient.Measurement.Id,
+                        Name = iop.Ingredient.Measurement.Name
+                    },
+                    Groups = iop.Ingredient.GroupsOnIngredient.Select(groupOnIngredient => new GroupResponse
+                    {
+                        Id = groupOnIngredient.Group.Id,
+                        Name = groupOnIngredient.Group.Name
+                    }).ToList()
+                }).ToList()
+            }).ToList();
+
+            return new FindProductResponse
+            {
+                Products = productResponses,
+                TotalPages = totalPages,
+                TotalItems = totalItems
+            };
         }
 
         public async Task RemoveInputToProduct(RemoveInputToProduct product)

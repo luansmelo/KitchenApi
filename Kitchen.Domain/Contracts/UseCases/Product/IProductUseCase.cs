@@ -1,5 +1,4 @@
-﻿using Kitchen.Domain.Contracts.Repositories;
-
+﻿
 namespace Kitchen.Domain.Contracts.UseCases
 {
     public interface IProductUseCase

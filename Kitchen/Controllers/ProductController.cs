@@ -83,5 +83,20 @@ namespace Kitchen.Controllers
                 return StatusCode(500, "Internal server error" + ex.Message);
             }
         }
+
+        [HttpGet]
+        public async Task<ActionResult<FindProductResponse>> GetAll(int page = 1, int pageSize = 10, string sortOrder = "asc")
+        {
+            try
+            {
+                var products = await _productUseCase.LoadAll(page, pageSize, sortOrder);
+
+                return Ok(products);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal server error" + ex.Message);
+            }
+        }
     }
 }
