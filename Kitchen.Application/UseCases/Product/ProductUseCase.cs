@@ -72,9 +72,9 @@ namespace Kitchen.Application.UseCases
             return productResponse;
         }
 
-        public Task<FindProductResponse> LoadAll(int page, int pageSize, string sortOrder)
+        public async Task<FindProductResponse> LoadAll(int page, int pageSize, string sortOrder)
         {
-            throw new NotImplementedException();
+            return await _productRepository.LoadAll(page, pageSize, sortOrder);
         }
 
         public async Task RemoveInputToProduct(RemoveInputToProduct product)

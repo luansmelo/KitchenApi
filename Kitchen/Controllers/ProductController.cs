@@ -24,7 +24,7 @@ namespace Kitchen.Controllers
             }
         }
 
-        [HttpPost("add/input")]
+        [HttpPost("add/ingredient")]
         public async Task<IActionResult> AddInput(AddIngredientToProductInput input)
         {
             try
@@ -45,6 +45,21 @@ namespace Kitchen.Controllers
             try
             {
                 await _productUseCase.DeleteById(id);
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal server error" + ex.Message);
+            }
+        }
+
+        [HttpDelete("remove/ingredient")]
+        public async Task<IActionResult> DeleteIngredient(RemoveInputToProduct product)
+        {
+            try
+            {
+                await _productUseCase.RemoveInputToProduct(product);
 
                 return Ok();
             }
