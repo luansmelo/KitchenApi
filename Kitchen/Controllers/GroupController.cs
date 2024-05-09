@@ -1,21 +1,21 @@
 ﻿using FluentValidation;
-using Kitchen.Domain.Contracts.UseCases;
+using Kitchen.Application.Contracts.UseCases;
+using Kitchen.Application.DTOs.Group;
+using Kitchen.Application.Error;
 using Kitchen.Domain.Entities;
-using Kitchen.Models.Error;
-using Kitchen.Models.Group.Validation;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Kitchen.Controllers
 {
     [Route("api/v1/group")]
     [ApiController]
-    public class GroupController(IGroupUseCase groupUseCase, IValidator<GroupInput> validator) : ControllerBase
+    public class GroupController(IGroupUseCase groupUseCase, IValidator<GroupDto> validator) : ControllerBase
     {
         private readonly IGroupUseCase _groupUseCase = groupUseCase;
-        private readonly IValidator<GroupInput> _validator = validator;
+        private readonly IValidator<GroupDto> _validator = validator;
 
         [HttpPost]
-        public async Task<IActionResult> Add(GroupInput input)
+        public async Task<IActionResult> Add([FromBody] GroupDto input)
         {
             try
             {
@@ -26,9 +26,7 @@ namespace Kitchen.Controllers
                     return BadRequest(validation.Errors.ToCustomValidationFailure());
                 }
 
-                var group = new Group(input.Name);
-
-                await _groupUseCase.AddGroup(group);
+                await _groupUseCase.AddGroup(input);
 
                 return Ok();
             }

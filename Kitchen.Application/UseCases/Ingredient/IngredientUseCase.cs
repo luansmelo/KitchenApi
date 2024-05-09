@@ -1,7 +1,7 @@
-﻿using Kitchen.Domain.Contracts;
-using Kitchen.Domain.Contracts.Repositories;
-using Kitchen.Domain.Contracts.UseCases;
+﻿using Kitchen.Domain.Contracts.Repositories;
+using Kitchen.Application.Contracts.UseCases;
 using Kitchen.Domain.Entities;
+using Kitchen.Application.DTOs.Ingredient;
 
 namespace Kitchen.Application.UseCases
 {
@@ -15,18 +15,18 @@ namespace Kitchen.Application.UseCases
         private readonly IMeasurementRepository _measurementRepository = measurementRepository;
         private readonly IGroupRepository _groupRepository = groupRepository;
 
-        public async Task AddIngredient(IngredientInput input)
+        public async Task AddIngredient(IngredientDto input)
         {
             var measurement = await _measurementRepository.GetById(input.MeasurementId)
                 ?? throw new Exception("Unidade de medida não encontrada");
 
-            var ingredient = new Domain.Entities.Ingredient.Ingredient()
+            var ingredient = new Ingredient()
             {
                 Name = input.Name,
                 Code = input.Code,
                 UnitPrice = input.UnitPrice,
                 MeasurementId = measurement.Id,
-                GroupsOnIngredient = new List<GroupsOnIngredient>()
+                GroupsOnIngredient = []
             };
 
             foreach (var groupId in input.GroupIds)
@@ -35,12 +35,8 @@ namespace Kitchen.Application.UseCases
                 if (group != null)
                 {
                     ingredient.GroupsOnIngredient.Add(new GroupsOnIngredient
-                    { GroupId = group.Id, IngredientId = ingredient.Id }
+                        { GroupId = group.Id, IngredientId = ingredient.Id }
                     );
-                }
-                else
-                {
-                    throw new Exception($"Group com Id {groupId} não encontrado");
                 }
             }
 

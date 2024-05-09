@@ -1,4 +1,4 @@
-﻿namespace Kitchen.Domain.Entities.Ingredient
+﻿namespace Kitchen.Domain.Entities
 {
     public class Ingredient : BaseEntity
     {

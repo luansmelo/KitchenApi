@@ -1,21 +1,22 @@
 ﻿using FluentValidation;
+using Kitchen.Application.Contracts.UseCases;
+using Kitchen.Application.DTOs.Category;
+using Kitchen.Application.Error;
 using Kitchen.Domain.Contracts.UseCases;
 using Kitchen.Domain.Entities;
-using Kitchen.Models.Category.Validation;
-using Kitchen.Models.Error;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Kitchen.Controllers
 {
     [Route("api/v1/category")]
     [ApiController]
-    public class CategoryController(ICategoryUseCase categoryUseCase, IValidator<CategoryInput> validator) : ControllerBase
+    public class CategoryController(ICategoryUseCase categoryUseCase, IValidator<CategoryDto> validator) : ControllerBase
     {
         private readonly ICategoryUseCase _categoryUseCase = categoryUseCase; 
-        private readonly IValidator<CategoryInput> _validator = validator;
+        private readonly IValidator<CategoryDto> _validator = validator;
 
         [HttpPost]
-        public async Task<IActionResult> Add(CategoryInput input)
+        public async Task<IActionResult> Add([FromBody] CategoryDto input)
         {
             try
             {
@@ -26,9 +27,7 @@ namespace Kitchen.Controllers
                     return BadRequest(validation.Errors.ToCustomValidationFailure());
                 }
 
-                var category = new Category(input.Name);
-
-                await _categoryUseCase.AddCategory(category);
+                await _categoryUseCase.AddCategory(input);
 
                 return Ok();
             } catch (Exception ex)

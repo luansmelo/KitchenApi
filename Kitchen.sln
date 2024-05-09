@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34728.123
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kitchen", "Kitchen\Kitchen.csproj", "{FCF96EA2-5D23-43B9-8D1B-71502E186A3C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kitchen.API", "Kitchen\Kitchen.API.csproj", "{FCF96EA2-5D23-43B9-8D1B-71502E186A3C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kitchen.Infra", "Kitchen.Infra\Kitchen.Infra.csproj", "{D5CC7346-67DA-4A40-A9FD-3CAF0061901D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kitchen.Infra", "Kitchen.Infra\Kitchen.Infra.csproj", "{D5CC7346-67DA-4A40-A9FD-3CAF0061901D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kitchen.Application", "Kitchen.Application\Kitchen.Application.csproj", "{BB4DA213-9DB4-4E11-A2F8-F238632C8937}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kitchen.Application", "Kitchen.Application\Kitchen.Application.csproj", "{BB4DA213-9DB4-4E11-A2F8-F238632C8937}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kitchen.Domain", "Kitchen.Domain\Kitchen.Domain.csproj", "{32DC1E61-2FD6-4F46-97D3-CC2AA3EB6DA6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kitchen.Domain", "Kitchen.Domain\Kitchen.Domain.csproj", "{32DC1E61-2FD6-4F46-97D3-CC2AA3EB6DA6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

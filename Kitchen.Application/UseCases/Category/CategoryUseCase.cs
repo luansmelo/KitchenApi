@@ -1,4 +1,6 @@
-﻿using Kitchen.Domain.Contracts;
+﻿using Kitchen.Application.Contracts.UseCases;
+using Kitchen.Application.DTOs.Category;
+using Kitchen.Domain.Contracts;
 using Kitchen.Domain.Contracts.UseCases;
 using Kitchen.Domain.Entities;
 
@@ -8,7 +10,7 @@ namespace Kitchen.Application.UseCases
     {
         private readonly ICategoryRepository _categoryRepository = categoryRepository;
 
-        public async Task AddCategory(Category category)
+        public async Task AddCategory(CategoryDto category)
         {
             var categoryExists = await _categoryRepository.GetByName(category.Name);
 
@@ -17,7 +19,9 @@ namespace Kitchen.Application.UseCases
                 throw new Exception("Categoria já cadastrada");
             }
 
-            await _categoryRepository.AddCategory(category);
+            var categoryEntity = new Category(category.Name);
+
+            await _categoryRepository.AddCategory(categoryEntity);
         }
 
         public async Task DeleteById(Guid id)

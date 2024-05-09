@@ -135,11 +135,27 @@ namespace Kitchen.Infra.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
 
                     b.ToTable("Measurement");
+                });
+
+            modelBuilder.Entity("Kitchen.Domain.Entities.Menu", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Nome")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Menu");
                 });
 
             modelBuilder.Entity("Kitchen.Domain.Entities.Product", b =>

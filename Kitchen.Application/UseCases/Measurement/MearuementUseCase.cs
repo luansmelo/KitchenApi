@@ -1,7 +1,7 @@
-﻿using Kitchen.Domain.Contracts;
-using Kitchen.Domain.Contracts.Repositories;
-using Kitchen.Domain.Contracts.UseCases;
+﻿using Kitchen.Domain.Contracts.Repositories;
+using Kitchen.Application.Contracts.UseCases;
 using Kitchen.Domain.Entities;
+using Kitchen.Application.DTOs.Measurement;
 
 namespace Kitchen.Application.UseCases
 {
@@ -9,7 +9,7 @@ namespace Kitchen.Application.UseCases
     {
         private readonly IMeasurementRepository _measurementRepository = measurementRepository;
 
-        public async Task AddMeasurement(Measurement measurement)
+        public async Task AddMeasurement(MeasurementDto measurement)
         {
             var measurementExists = await _measurementRepository.GetByName(measurement.Name);
 
@@ -18,7 +18,9 @@ namespace Kitchen.Application.UseCases
                 throw new Exception("Unidade já cadastrada");
             }
 
-            await _measurementRepository.AddMeasurement(measurement);
+            var measurementEntity = new Measurement(measurement.Name);
+
+            await _measurementRepository.AddMeasurement(measurementEntity);
         }
 
         public async Task DeleteById(Guid id)

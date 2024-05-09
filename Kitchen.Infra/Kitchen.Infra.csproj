@@ -20,9 +20,9 @@
     <PackageReference Include="Npgsql" Version="8.0.2" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.2" />
   </ItemGroup>
-
+	
   <ItemGroup>
-    <ProjectReference Include="..\Kitchen.Domain\Kitchen.Domain.csproj" />
-  </ItemGroup>
-
+	<ProjectReference Include="..\Kitchen.Application\Kitchen.Application.csproj" />
+	<ProjectReference Include="..\Kitchen.Domain\Kitchen.Domain.csproj" />
+   </ItemGroup>
 </Project>

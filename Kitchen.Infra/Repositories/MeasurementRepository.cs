@@ -1,6 +1,5 @@
-﻿using Kitchen.Domain.Contracts;
+﻿using Kitchen.Application.Contracts.UseCases;
 using Kitchen.Domain.Contracts.Repositories;
-using Kitchen.Domain.Contracts.UseCases;
 using Kitchen.Domain.Entities;
 using Kitchen.Infra.KitchenConnectionContext;
 using Microsoft.EntityFrameworkCore;
@@ -74,7 +73,7 @@ namespace Kitchen.Infra.Repositories
 
             return new FindMeasuresResponse
             {
-                Measures = measures.Select(c => new Partial<Measurement> { Id = c.Id, Name = c.Name }).ToList(),
+                Measures = measures.Select(c => new Measurement { Id = c.Id, Name = c.Name }).ToList(),
                 TotalPages = totalPages,
                 TotalItems = totalItems
             };

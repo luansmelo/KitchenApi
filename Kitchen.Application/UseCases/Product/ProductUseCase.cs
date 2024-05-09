@@ -1,6 +1,7 @@
 ﻿using Kitchen.Domain.Contracts.Repositories;
-using Kitchen.Domain.Contracts.UseCases;
+using Kitchen.Application.Contracts.UseCases;
 using Kitchen.Domain.Entities;
+using Kitchen.Application.DTOs.Product;
 
 namespace Kitchen.Application.UseCases
 {
@@ -14,7 +15,7 @@ namespace Kitchen.Application.UseCases
             await _productRepository.AddInputToProduct(product);
         }
 
-        public async Task AddProduct(ProductInput input)
+        public async Task AddProduct(ProductDto input)
         {
             var product = new Product()
             {

@@ -1,5 +1,4 @@
 ﻿using Kitchen.Domain.Entities;
-using Kitchen.Domain.Entities.Ingredient;
 using Microsoft.EntityFrameworkCore;
 
 namespace Kitchen.Infra.KitchenConnectionContext
@@ -13,5 +12,6 @@ namespace Kitchen.Infra.KitchenConnectionContext
         DbSet<GroupsOnIngredient> GroupsOnIngredient { get; set; }
         DbSet<Product> Product { get; set; }
         DbSet<IngredientsOnProduct> IngredientsOnProduct { get; set; }
+        DbSet<Menu> Menu { get; set; }
     }
 }

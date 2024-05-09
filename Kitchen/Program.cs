@@ -1,13 +1,17 @@
 using FluentValidation;
+using Kitchen.Application.Contracts.UseCases;
+using Kitchen.Application.DTOs;
+using Kitchen.Application.DTOs.Category;
+using Kitchen.Application.DTOs.Group;
+using Kitchen.Application.DTOs.Measurement;
 using Kitchen.Application.UseCases;
+using Kitchen.Application.Validation;
+using Kitchen.Application.Validation.Measurement;
+using Kitchen.Application.Validation.Menu;
 using Kitchen.Domain.Contracts;
 using Kitchen.Domain.Contracts.Repositories;
-using Kitchen.Domain.Contracts.UseCases;
 using Kitchen.Infra.KitchenConnectionContext;
 using Kitchen.Infra.Repositories;
-using Kitchen.Models.Category.Validation;
-using Kitchen.Models.Group.Validation;
-using Kitchen.Models.Measure.Validation;
 
 namespace Kitchen
 {
@@ -25,14 +29,17 @@ namespace Kitchen
             builder.Services.AddScoped<IGroupUseCase, GroupUseCase>();
             builder.Services.AddScoped<IIngredientUseCase, IngredientUseCase>();
             builder.Services.AddScoped<IProductUseCase, ProductUseCase>();
+            builder.Services.AddScoped<IMenuUseCase, MenuUseCase>();
             builder.Services.AddScoped<IGroupRepository, GroupRepository>();  
             builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
             builder.Services.AddScoped<IMeasurementRepository, MeasurementRepository>();
             builder.Services.AddScoped<IIngredientRepository, IngredientRepository>();
             builder.Services.AddScoped<IProductRepository, ProductRepository>();
-            builder.Services.AddTransient<IValidator<CategoryInput>, CategoryInputValidation>();
-            builder.Services.AddTransient<IValidator<MeasurementInput>, MeasurementInputValidation>();
-            builder.Services.AddTransient<IValidator<GroupInput>, GroupInputValidation>();
+            builder.Services.AddScoped<IMenuRepository, MenuRepository>();
+            builder.Services.AddTransient<IValidator<CategoryDto>, CategoryDtoValidation>();
+            builder.Services.AddTransient<IValidator<MeasurementDto>, MeasurementDtoValidation>();
+            builder.Services.AddTransient<IValidator<GroupDto>, GroupDtoValidation>();
+            builder.Services.AddTransient<IValidator<MenuDto>, MenuDtoValidation>();
             builder.Services.AddPersistence(builder.Configuration);
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();

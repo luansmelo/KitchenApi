@@ -1,4 +1,5 @@
-﻿using Kitchen.Domain.Contracts.UseCases;
+﻿using Kitchen.Application.Contracts.UseCases;
+using Kitchen.Application.DTOs.Product;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Kitchen.Controllers
@@ -10,7 +11,7 @@ namespace Kitchen.Controllers
         private readonly IProductUseCase _productUseCase = productUseCase;
 
         [HttpPost]
-        public async Task<IActionResult> Add(ProductInput input)
+        public async Task<IActionResult> Add([FromBody] ProductDto input)
         {
             try
             {
@@ -25,7 +26,7 @@ namespace Kitchen.Controllers
         }
 
         [HttpPost("add/ingredient")]
-        public async Task<IActionResult> AddInput(AddIngredientToProductInput input)
+        public async Task<IActionResult> AddInput([FromBody] AddIngredientToProductInput input)
         {
             try
             {

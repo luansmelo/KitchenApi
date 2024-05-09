@@ -1,7 +1,6 @@
-﻿using Kitchen.Domain.Contracts.Repositories;
-using Kitchen.Domain.Contracts.UseCases;
+﻿using Kitchen.Application.Contracts.UseCases;
+using Kitchen.Domain.Contracts.Repositories;
 using Kitchen.Domain.Entities;
-using Kitchen.Domain.Entities.Ingredient;
 using Kitchen.Infra.KitchenConnectionContext;
 using Microsoft.EntityFrameworkCore;
 

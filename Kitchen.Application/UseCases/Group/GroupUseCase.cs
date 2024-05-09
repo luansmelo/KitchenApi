@@ -1,13 +1,14 @@
 ﻿using Kitchen.Domain.Contracts.Repositories;
-using Kitchen.Domain.Contracts.UseCases;
+using Kitchen.Application.Contracts.UseCases;
 using Kitchen.Domain.Entities;
+using Kitchen.Application.DTOs.Group;
 
 namespace Kitchen.Application.UseCases
 {
     public class GroupUseCase(IGroupRepository groupRepository) : IGroupUseCase
     {
         private readonly IGroupRepository _groupRepository = groupRepository;
-        public async Task AddGroup(Group group)
+        public async Task AddGroup(GroupDto group)
         {
             var groupExists = await _groupRepository.GetByName(group.Name);
 
@@ -16,7 +17,9 @@ namespace Kitchen.Application.UseCases
                 throw new Exception("Grupo já cadastrado");
             }
 
-            await _groupRepository.AddGroup(group);
+            var groupEntity = new Group(group.Name);
+
+            await _groupRepository.AddGroup(groupEntity);
         }
 
         public async Task DeleteById(Guid id)

@@ -78,7 +78,7 @@ namespace Kitchen.Infra.Repositories
 
             return new FindCategoriesResponse
             {
-                Categories = categories.Select(c => new Partial<Category> { Id = c.Id, Name = c.Name }).ToList(),
+                Categories = categories.Select(c => new Category { Id = c.Id, Name = c.Name }).ToList(),
                 TotalPages = totalPages,
                 TotalItems = totalItems
             };

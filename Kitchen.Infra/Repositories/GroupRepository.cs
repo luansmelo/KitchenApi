@@ -1,5 +1,5 @@
-﻿using Kitchen.Domain.Contracts.Repositories;
-using Kitchen.Domain.Contracts.UseCases;
+﻿using Kitchen.Application.Contracts.UseCases;
+using Kitchen.Domain.Contracts.Repositories;
 using Kitchen.Domain.Entities;
 using Kitchen.Infra.KitchenConnectionContext;
 using Microsoft.EntityFrameworkCore;
@@ -70,7 +70,7 @@ namespace Kitchen.Infra.Repositories
 
             return new FindGroupsResponse
             {
-                Groups = groups.Select(c => new Partial<Group> { Id = c.Id, Name = c.Name }).ToList(),
+                Groups = groups.Select(c => new Group { Id = c.Id, Name = c.Name }).ToList(),
                 TotalPages = totalPages,
                 TotalItems = totalItems
             };
