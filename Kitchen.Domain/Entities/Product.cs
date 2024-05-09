@@ -10,5 +10,6 @@
         public string? Photo_url { get; set; } = string.Empty;
         public string Status {  get; set; } = string.Empty;
         public ICollection<IngredientsOnProduct> IngredientsOnProduct { get; set; } = [];
+        public ICollection<MenuSelections> MenuSelections { get; set; } = [];
     }
 }
