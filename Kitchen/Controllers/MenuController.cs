@@ -34,6 +34,21 @@ namespace Kitchen.API.Controllers
             }
         }
 
+        [HttpPost("add/product")]
+        public async Task<ActionResult> Add([FromBody] AddProductDto input)
+        {
+            try
+            {
+                await _menuUseCase.AddProductToMenu(input);
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal server error" + ex.Message);
+            }
+        }
+
         [HttpGet("{id}")]
         public async Task<ActionResult<MenuResponse>> GetById(Guid id)
         {

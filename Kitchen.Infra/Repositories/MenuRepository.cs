@@ -55,9 +55,10 @@ namespace Kitchen.Infra.Repositories
                 ));
         }
 
-        public Task AddProduct(MenuSelections menu)
+        public async Task AddProduct(MenuSelections menu)
         {
-            throw new NotImplementedException();
+            await _hotelDbContext.MenuSelections.AddAsync(menu);
+            await _hotelDbContext.SaveChangesAsync();
         }
     }
 }

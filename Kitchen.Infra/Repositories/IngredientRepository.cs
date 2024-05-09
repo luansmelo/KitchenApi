@@ -113,27 +113,33 @@ namespace Kitchen.Infra.Repositories
                     ingredientUpdate.UnitPrice = Convert.ToDecimal(input.UnitPrice);
                 }
 
-                if (input.GroupIds != null && input.GroupIds.Any())
+                var newGroupIds = input.GroupIds ?? [];
+
+                var existingGroupIds = ingredientUpdate.GroupsOnIngredient.Select(g => g.GroupId).ToList();
+
+                var groupsToDelete = existingGroupIds.Except(newGroupIds).ToList();
+                var groupsToAdd = newGroupIds.Except(existingGroupIds).ToList();
+
+                foreach (var groupId in groupsToDelete)
                 {
-                    var existingGroupIds = ingredientUpdate.GroupsOnIngredient.Select(g => g.GroupId).ToList();
-
-                    foreach (var group in ingredientUpdate.GroupsOnIngredient.ToList())
+                    var existingGroupOnIngredient = ingredientUpdate.GroupsOnIngredient.FirstOrDefault(g => g.GroupId == groupId);
+                    if (existingGroupOnIngredient != null)
                     {
-                        _hotelDbContext.GroupsOnIngredient.Remove(group);
-                    }
-
-                    foreach (var groupId in input.GroupIds)
-                    {
-                        var newGroupOnIngredient = new GroupsOnIngredient
-                        {
-                            GroupId = groupId,
-                            IngredientId = ingredientUpdate.Id
-                        };
-
-                        await _hotelDbContext.GroupsOnIngredient.AddAsync(newGroupOnIngredient);
+                        _hotelDbContext.GroupsOnIngredient.Remove(existingGroupOnIngredient);
                     }
                 }
-              
+
+                foreach (var groupId in groupsToAdd)
+                {
+                    var newGroupOnIngredient = new GroupsOnIngredient
+                    {
+                        GroupId = groupId,
+                        IngredientId = ingredientUpdate.Id
+                    };
+
+                    await _hotelDbContext.GroupsOnIngredient.AddAsync(newGroupOnIngredient);
+                }
+
                 _hotelDbContext.Ingredient.Update(ingredientUpdate);
 
                 await _hotelDbContext.SaveChangesAsync();

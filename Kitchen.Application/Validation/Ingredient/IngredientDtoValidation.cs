@@ -3,7 +3,7 @@ using Kitchen.Application.DTOs.Ingredient;
 
 namespace Kitchen.Application.Validation.Ingredient
 {
-    internal class IngredientDtoValidation : AbstractValidator<IngredientDto>
+    public class IngredientDtoValidation : AbstractValidator<IngredientDto>
     {
         public IngredientDtoValidation()
         {
