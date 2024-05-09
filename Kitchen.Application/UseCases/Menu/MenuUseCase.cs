@@ -27,6 +27,27 @@ namespace Kitchen.Application.UseCases
             await _menuRepository.AddMenu(menuEntity);
         }
 
+        public async Task AddProductToMenu(AddProductDto addProductDto)
+        {
+            await GetById(addProductDto.MenuId);
+
+            foreach (var product in addProductDto.Products)
+            {
+                foreach (var day in product.WeekDays)
+                {
+                    var productToAdd = new MenuSelections()
+                    {
+                        MenuId = addProductDto.MenuId,
+                        ProductId = product.ProductId,
+                        CategoryId = addProductDto.CategoryId,
+                        WeekDay = day,
+                    };
+
+                    await _menuRepository.AddProduct(productToAdd);
+                }
+            }
+        }
+
         public async Task DeleteById(Guid id)
         {
             await GetById(id);

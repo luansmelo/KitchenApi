@@ -54,5 +54,10 @@ namespace Kitchen.Infra.Repositories
                     ms.ProductId == menuSelections.ProductId
                 ));
         }
+
+        public Task AddProduct(MenuSelections menu)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

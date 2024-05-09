@@ -10,5 +10,6 @@ namespace Kitchen.Application.Contracts.UseCases
         Task<Menu> GetById(Guid id);
         Task DeleteById(Guid id);
         Task<MenuResponse> GetByMenu(Guid menuId, Guid categoryId, Guid productId, string weekDay);
+        Task AddProductToMenu(AddProductDto addProductDto);
     }
 }
