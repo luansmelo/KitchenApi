@@ -1,20 +1,30 @@
-﻿using Kitchen.Application.Contracts.UseCases;
+﻿using FluentValidation;
+using Kitchen.Application.Contracts.UseCases;
 using Kitchen.Application.DTOs.Ingredient;
+using Kitchen.Application.Error;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Kitchen.Controllers
 {
     [Route("api/v1/ingredient")]
     [ApiController]
-    public class IngredientController(IIngredientUseCase ingredientUseCase) : ControllerBase
+    public class IngredientController(IIngredientUseCase ingredientUseCase, IValidator<IngredientDto> validator) : ControllerBase
     {   
         private readonly IIngredientUseCase _ingredientUseCase = ingredientUseCase;
+        private readonly IValidator<IngredientDto> _validator = validator;
 
         [HttpPost]
         public async Task<IActionResult> Add([FromBody] IngredientDto input)
         {
             try
             {
+                var validation = _validator.Validate(input);
+
+                if (!validation.IsValid)
+                {
+                    return BadRequest(validation.Errors.ToCustomValidationFailure());
+                }
+
                 await _ingredientUseCase.AddIngredient(input);
 
                 return Ok();
