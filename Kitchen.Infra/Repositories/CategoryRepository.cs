@@ -34,9 +34,8 @@ namespace Kitchen.Infra.Repositories
 
         public async Task<Category> GetById(Guid id)
         {
-            return await _hotelDbContext
-                .Category
-                .FirstOrDefaultAsync(c => c.Id == id);
+            var category = await _hotelDbContext.Category.FirstOrDefaultAsync(c => c.Id == id);
+            return category;
         }
 
         public async Task<Category> GetByName(string name)

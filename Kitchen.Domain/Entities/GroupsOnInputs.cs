@@ -2,9 +2,9 @@
 {
     public class GroupsOnIngredient : BaseEntity
     {
-        public Guid IngredientId { get; set; }
-        public Ingredient Ingredient { get; set; }
-        public Guid GroupId { get; set; }
-        public Group Group { get; set; }
+        public Guid IngredientId { get; set; } = Guid.Empty;
+        public Ingredient Ingredient { get; set; } = new();
+        public Guid GroupId { get; set; } = Guid.Empty;
+        public  Group Group { get; set; } = new();
     }
 }

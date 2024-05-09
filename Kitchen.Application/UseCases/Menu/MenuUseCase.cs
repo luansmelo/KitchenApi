@@ -11,12 +11,25 @@ namespace Kitchen.Application.UseCases
 
         public async Task AddMenu(MenuDto menu)
         {
+            var menuExist = await _menuRepository.GetByName(menu.Name);
+
+            if (menuExist != null)
+            {
+                throw new Exception("Menu já cadastrado");
+            }
+
             var menuEntity = new Menu()
             {
                 Name = menu.Name,
             };
 
             await _menuRepository.AddMenu(menuEntity);
+        }
+
+        public async Task<Menu> GetById(Guid id)
+        {
+            var menu = await _menuRepository.GetById(id) ?? throw new Exception("Menu não encontrado");
+            return menu;
         }
     }
 }

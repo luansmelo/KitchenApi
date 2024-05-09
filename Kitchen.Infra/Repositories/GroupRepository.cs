@@ -33,6 +33,7 @@ namespace Kitchen.Infra.Repositories
 
         public async Task<Group> GetById(Guid id)
         {
+            #pragma warning disable CS8603 // Possible null reference return.
             return await _hotelDbContext
                 .Group
                 .FirstOrDefaultAsync(c => c.Id == id);

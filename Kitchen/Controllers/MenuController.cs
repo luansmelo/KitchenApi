@@ -2,6 +2,7 @@
 using Kitchen.Application.Contracts.UseCases;
 using Kitchen.Application.DTOs;
 using Kitchen.Application.Error;
+using Kitchen.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Kitchen.API.Controllers
@@ -28,6 +29,21 @@ namespace Kitchen.API.Controllers
 
                 return Ok();
             } catch(Exception ex)
+            {
+                return StatusCode(500, "Internal server error" + ex.Message);
+            }
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Menu>> GetById(Guid id)
+        {
+            try
+            {
+                var menu = await _menuUseCase.GetById(id);
+
+                return Ok(menu);
+            }
+            catch (Exception ex)
             {
                 return StatusCode(500, "Internal server error" + ex.Message);
             }
