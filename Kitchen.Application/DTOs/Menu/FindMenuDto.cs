@@ -1,13 +1,10 @@
-﻿namespace Kitchen.Domain.Entities
+﻿namespace Kitchen.Application.DTOs
 {
-    public class MenuSelections : BaseEntity
+    public class FindMenuDto
     {
         public string WeekDay { get; set; } = string.Empty;
         public Guid MenuId { get; set; } = Guid.Empty;
         public Guid CategoryId { get; set; } = Guid.Empty;
         public Guid ProductId { get; set; } = Guid.Empty;
-        public Menu Menu { get; set; } = new();
-        public Category Category { get; set; } = new();
-        public Product Product { get; set; } = new();
     }
 }

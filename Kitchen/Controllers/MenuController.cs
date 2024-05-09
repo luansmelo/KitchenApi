@@ -2,7 +2,7 @@
 using Kitchen.Application.Contracts.UseCases;
 using Kitchen.Application.DTOs;
 using Kitchen.Application.Error;
-using Kitchen.Domain.Entities;
+using Kitchen.Application.UseCases.Menu;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Kitchen.API.Controllers
@@ -35,12 +35,42 @@ namespace Kitchen.API.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Menu>> GetById(Guid id)
+        public async Task<ActionResult<MenuResponse>> GetById(Guid id)
         {
             try
             {
                 var menu = await _menuUseCase.GetById(id);
 
+                return Ok(menu);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal server error" + ex.Message);
+            }
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteById(Guid id)
+        {
+            try
+            {
+                await _menuUseCase.DeleteById(id);
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal server error" + ex.Message);
+            }
+        }
+
+        [HttpGet("{menuId}/category/{categoryId}/product/{productId}/weekDay/{weekDay}")]
+        public async Task<ActionResult<MenuResponse>> GetMenu([FromRoute] Guid menuId, Guid categoryId, Guid productId, string weekDay)
+        {
+            try
+            {
+                var menu = await _menuUseCase.GetByMenu(menuId, categoryId, productId, weekDay);
+                
                 return Ok(menu);
             }
             catch (Exception ex)

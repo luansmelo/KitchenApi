@@ -13,5 +13,6 @@ namespace Kitchen.Infra.KitchenConnectionContext
         DbSet<Product> Product { get; set; }
         DbSet<IngredientsOnProduct> IngredientsOnProduct { get; set; }
         DbSet<Menu> Menu { get; set; }
+        DbSet<MenuSelections> MenuSelections { get; set; }
     }
 }
