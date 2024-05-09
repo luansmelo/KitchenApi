@@ -1,20 +1,30 @@
-﻿using Kitchen.Application.Contracts.UseCases;
+﻿using FluentValidation;
+using Kitchen.Application.Contracts.UseCases;
 using Kitchen.Application.DTOs.Product;
+using Kitchen.Application.Error;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Kitchen.Controllers
 {
     [Route("api/v1/product")]
     [ApiController]
-    public class ProductController(IProductUseCase productUseCase) : ControllerBase
+    public class ProductController(IProductUseCase productUseCase, IValidator<ProductDto> validator) : ControllerBase
     {   
         private readonly IProductUseCase _productUseCase = productUseCase;
+        private readonly IValidator<ProductDto> _validator = validator;
 
         [HttpPost]
         public async Task<IActionResult> Add([FromBody] ProductDto input)
         {
             try
             {
+                var validation = _validator.Validate(input);
+
+                if (!validation.IsValid)
+                {
+                    return BadRequest(validation.Errors.ToCustomValidationFailure());
+                }
+
                 await _productUseCase.AddProduct(input);
 
                 return Ok();
