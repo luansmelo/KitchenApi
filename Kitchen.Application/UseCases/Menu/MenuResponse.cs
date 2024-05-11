@@ -22,6 +22,11 @@
         public string Status { get; set; } = string.Empty;
         public string WeekDay { get; set; } = string.Empty;
         public List<IngredientModel> Ingredients { get; set; } = [];
+
+        public static implicit operator List<object>(ProductModel v)
+        {
+            throw new NotImplementedException();
+        }
     }
 
     public class CategoryModel

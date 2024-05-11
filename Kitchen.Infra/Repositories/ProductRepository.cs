@@ -109,7 +109,7 @@ namespace Kitchen.Infra.Repositories
                 PreparationTime = product.PreparationTime,
                 Resource = product.Resource,
                 Photo_url = product.Photo_url,
-                Status = product.Status,
+                Status = product.Status.ToString() ?? "",
                 Ingredients = product.IngredientsOnProduct.Select(iop => new IngredientResponse
                 {
                     Id = iop.Ingredient.Id,

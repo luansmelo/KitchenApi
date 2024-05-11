@@ -1,4 +1,5 @@
-﻿using Kitchen.Domain.Contracts.Repositories;
+﻿using Kitchen.Application.DTOs;
+using Kitchen.Domain.Contracts.Repositories;
 using Kitchen.Domain.Entities;
 using Kitchen.Infra.KitchenConnectionContext;
 using Microsoft.EntityFrameworkCore;
@@ -41,19 +42,33 @@ namespace Kitchen.Infra.Repositories
             }
         }
 
-        public async Task<Menu> GetByMenu(MenuSelections menuSelections)
+        public async Task<Menu> GetByMenu(FindMenuDto menuSelections)
         {
-            return await _hotelDbContext.Menu
+            var menu = await _hotelDbContext.Menu
                 .Include(menu => menu.MenuSelections)
                 .ThenInclude(ms => ms.Category)
                 .Include(menu => menu.MenuSelections)
                 .ThenInclude(ms => ms.Product)
-                .FirstOrDefaultAsync(menu => menu.MenuSelections.Any(ms =>
-                    ms.WeekDay == menuSelections.WeekDay &&
-                    ms.CategoryId == menuSelections.CategoryId &&
-                    ms.ProductId == menuSelections.ProductId
-                ));
+                .ThenInclude(p => p.IngredientsOnProduct)
+                .FirstOrDefaultAsync(menu => menu.MenuSelections
+                    .Any(ms =>
+                        ms.MenuId == menuSelections.MenuId &&
+                        ms.WeekDay == menuSelections.WeekDay &&
+                        ms.CategoryId == menuSelections.CategoryId
+                    )
+                );
+
+            if (menu != null)
+            {
+                menu.MenuSelections = menu.MenuSelections
+                    .Where(ms => ms.WeekDay == menuSelections.WeekDay)
+                    .ToList();
+            }
+
+            return menu;
         }
+
+
 
         public async Task AddProduct(MenuSelections menu)
         {

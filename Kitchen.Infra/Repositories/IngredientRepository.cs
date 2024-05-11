@@ -55,6 +55,7 @@ namespace Kitchen.Infra.Repositories
         public async Task<FindIngredientsResponse> LoadAll(int page, int pageSize, string sortOrder)
         {
             var query = _hotelDbContext.Ingredient
+                .Include(m => m.Measurement)
                 .Include(i => i.GroupsOnIngredient)
                 .ThenInclude(g => g.Group)
                 .AsQueryable();
@@ -72,8 +73,8 @@ namespace Kitchen.Infra.Repositories
                .ToListAsync();
 
             var ingredientsResponse = ingredients
-                .Select(c => new PartialIngredient<IngredientResponse> 
-                { 
+                .Select(c => new IngredientResponse
+                {
                     Id = c.Id,
                     Name = c.Name,
                     Code = c.Code,

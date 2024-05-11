@@ -5,11 +5,13 @@ using Kitchen.Application.DTOs.Category;
 using Kitchen.Application.DTOs.Group;
 using Kitchen.Application.DTOs.Ingredient;
 using Kitchen.Application.DTOs.Measurement;
+using Kitchen.Application.DTOs.Product;
 using Kitchen.Application.UseCases;
 using Kitchen.Application.Validation;
 using Kitchen.Application.Validation.Ingredient;
 using Kitchen.Application.Validation.Measurement;
 using Kitchen.Application.Validation.Menu;
+using Kitchen.Application.Validation.Product;
 using Kitchen.Domain.Contracts;
 using Kitchen.Domain.Contracts.Repositories;
 using Kitchen.Infra.KitchenConnectionContext;
@@ -43,6 +45,7 @@ namespace Kitchen
             builder.Services.AddTransient<IValidator<GroupDto>, GroupDtoValidation>();
             builder.Services.AddTransient<IValidator<MenuDto>, MenuDtoValidation>();
             builder.Services.AddTransient<IValidator<IngredientDto>, IngredientDtoValidation>();
+            builder.Services.AddTransient<IValidator<ProductDto>, ProductDtoValidation>();
             builder.Services.AddPersistence(builder.Configuration);
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
@@ -60,7 +63,6 @@ namespace Kitchen
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
-
 
             app.MapControllers();
 

@@ -5,6 +5,5 @@
         public string WeekDay { get; set; } = string.Empty;
         public Guid MenuId { get; set; } = Guid.Empty;
         public Guid CategoryId { get; set; } = Guid.Empty;
-        public Guid ProductId { get; set; } = Guid.Empty;
     }
 }

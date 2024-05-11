@@ -40,7 +40,7 @@ namespace Kitchen.Application.UseCases
                         MenuId = addProductDto.MenuId,
                         ProductId = product.ProductId,
                         CategoryId = addProductDto.CategoryId,
-                        WeekDay = day,
+                        WeekDay = day.ToUpper(),
                     };
 
                     await _menuRepository.AddProduct(productToAdd);
@@ -60,15 +60,13 @@ namespace Kitchen.Application.UseCases
             return menu;
         }
 
-        public async Task<MenuResponse> GetByMenu(Guid menuId, Guid categoryId, Guid productId, string weekDay)
+        public async Task<MenuResponse> GetByMenu(Guid menuId, Guid categoryId, string weekDay)
         {
-
-            var menu = await _menuRepository.GetByMenu(new MenuSelections
+            var menu = await _menuRepository.GetByMenu(new FindMenuDto
             {
-                WeekDay = weekDay,
+                WeekDay = weekDay.ToUpper(),
                 MenuId = menuId,
                 CategoryId = categoryId,
-                ProductId = productId
             }) ?? throw new Exception("Menu não encontrado");
 
             var mappedMenu = new MenuResponse
@@ -79,28 +77,29 @@ namespace Kitchen.Application.UseCases
                 {
                     CategoryId = category.Category.Id,
                     Name = category.Category.Name,
-                    Products = menu.MenuSelections.Select(p => new ProductModel
-                    {
-                        Id = p.Product.Id,
-                        Name = p.Product.Name,
-                        Description = p.Product.Description,
-                        Accession = p.Product.Accession,
-                        Resource = p.Product.Resource,
-                        PreparationTime = p.Product.PreparationTime,
-                        Photo_url = p.Product.Photo_url,
-                        Status = p.Product.Status,
-                        WeekDay = p.WeekDay,
-                        Ingredients = p.Product.IngredientsOnProduct.Select(ingredient => new IngredientModel
+                    Products = { 
+                        new ProductModel
                         {
-                            Id = ingredient.Id,
-                            Name = ingredient.Ingredient?.Name ?? "",
-                            Code = ingredient.Ingredient?.Code ?? "",
-                            UnitPrice = ingredient.Ingredient.UnitPrice,
-                            Grammage = ingredient.Grammage,
-                            MeasurementUnit = ingredient.Measurement
-                        }).ToList()
-                    }).ToList()
-
+                            Id = category.Product?.Id ?? Guid.Empty,
+                            Name = category.Product?.Name ?? "",
+                            Description = category.Product?.Description ?? "",
+                            Accession = category.Product?.Accession ?? 0,
+                            Resource = category.Product?.Resource ?? "",
+                            PreparationTime = category.Product?.PreparationTime ?? "",
+                            Photo_url = category.Product?.Photo_url ?? "",
+                            Status = category.Product?.Status.ToString() ?? "",
+                            WeekDay = category.WeekDay,
+                            Ingredients = category.Product.IngredientsOnProduct.Select(ingredient => new IngredientModel
+                            {
+                                Id = ingredient.Id,
+                                Name = ingredient.Ingredient?.Name ?? "",
+                                Code = ingredient.Ingredient?.Code ?? "",
+                                UnitPrice = ingredient.Ingredient?.UnitPrice ?? 0,
+                                Grammage = ingredient.Grammage,
+                                MeasurementUnit = ingredient.Measurement
+                            }).ToList()
+                        }
+                    }
                 }).ToList()
             };
 

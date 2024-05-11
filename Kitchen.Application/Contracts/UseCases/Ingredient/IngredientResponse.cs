@@ -15,7 +15,7 @@ namespace Kitchen.Application.Contracts.UseCases
         public string Code { get; set; } = string.Empty;
         public decimal UnitPrice { get; set; } = decimal.Zero;
         public decimal? Grammage {  get; set; } = decimal.Zero;
-        public Measurement Measurement { get; set; } 
-        public List<GroupResponse> Groups { get; set; }
+        public Measurement Measurement { get; set; } = null!;
+        public List<GroupResponse> Groups { get; set; } = null!;
     }
 }

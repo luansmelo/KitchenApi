@@ -79,12 +79,12 @@ namespace Kitchen.API.Controllers
             }
         }
 
-        [HttpGet("{menuId}/category/{categoryId}/product/{productId}/weekDay/{weekDay}")]
-        public async Task<ActionResult<MenuResponse>> GetMenu([FromRoute] Guid menuId, Guid categoryId, Guid productId, string weekDay)
+        [HttpGet("{menuId}/category/{categoryId}/weekDay/{weekDay}")]
+        public async Task<ActionResult<MenuResponse>> GetMenu([FromRoute] Guid menuId, Guid categoryId, string weekDay)
         {
             try
             {
-                var menu = await _menuUseCase.GetByMenu(menuId, categoryId, productId, weekDay);
+                var menu = await _menuUseCase.GetByMenu(menuId, categoryId, weekDay);
                 
                 return Ok(menu);
             }
