@@ -50,6 +50,7 @@ namespace Kitchen.Infra.Repositories
                 .Include(menu => menu.MenuSelections)
                 .ThenInclude(ms => ms.Product)
                 .ThenInclude(p => p.IngredientsOnProduct)
+                .ThenInclude(i => i.Ingredient)
                 .FirstOrDefaultAsync(menu => menu.MenuSelections
                     .Any(ms =>
                         ms.MenuId == menuSelections.MenuId &&
