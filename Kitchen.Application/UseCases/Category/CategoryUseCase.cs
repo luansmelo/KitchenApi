@@ -32,7 +32,7 @@ namespace Kitchen.Application.UseCases
             var category = await _categoryRepository.GetById(id)
                 ?? throw new Exception("Categoria não encontrada");
 
-            var categoryRemoved = await _categoryRepository.DeleteById(category.Id);
+            var categoryRemoved = await _categoryRepository.DeleteById(category);
 
             return _mapper.Map<CategoryDto>(categoryRemoved);
         }

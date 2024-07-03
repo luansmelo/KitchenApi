@@ -3,37 +3,30 @@ using Kitchen.Domain.Contracts.Repositories;
 using Kitchen.Infra.KitchenConnectionContext;
 using Kitchen.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using Kitchen.Application.DTOs;
 
 namespace Kitchen.Infra.Repositories
 {
-    public class GroupRepository : IGroupRepository
+    public class GroupRepository(HotelDbContext hotelDbContext) : IGroupRepository
     {
-        private readonly HotelDbContext _hotelDbContext;
+        private readonly HotelDbContext _hotelDbContext = hotelDbContext;
 
-        public GroupRepository(HotelDbContext hotelDbContext)
-        {
-            _hotelDbContext = hotelDbContext;
-        }
-        public async Task AddGroup(Group group)
+        public async Task<Group> AddGroup(Group group)
         {
             await _hotelDbContext.Group.AddAsync(group);
             await _hotelDbContext.SaveChangesAsync();
+            return group;
         }
 
-        public async Task DeleteById(Guid id)
+        public async Task<Group> DeleteById(Group group)
         {
-            var group = await GetById(id);
-
-            if (group != null)
-            {
-                _hotelDbContext.Group.Remove(group);
-                await _hotelDbContext.SaveChangesAsync();
-            }
+            _hotelDbContext.Group.Remove(group);
+            await _hotelDbContext.SaveChangesAsync();
+            return group;
         }
 
         public async Task<Group> GetById(Guid id)
         {
-            #pragma warning disable CS8603 // Possible null reference return.
             return await _hotelDbContext
                 .Group
                 .FirstOrDefaultAsync(c => c.Id == id);
@@ -69,29 +62,25 @@ namespace Kitchen.Infra.Repositories
                .Take(pageSize)
                .ToListAsync();
 
+            var groupDtos = groups.Select(c => new GroupDto
+            {
+                Id = c.Id,
+                Name = c.Name
+            }).ToList();
+
             return new FindGroupsResponse
             {
-                Groups = groups.Select(c => new Group { 
-                //    Id = c.Id,
-                    Name = c.Name
-                }).ToList(),
+                Groups = groupDtos,
                 TotalPages = totalPages,
                 TotalItems = totalItems
             };
         }
 
-        public async Task UpdateById(Guid id, Group group)
+        public async Task<Group> UpdateById(Group group)
         {
-            var groupUpdate = await GetById(id);
-            if (groupUpdate != null)
-            {
-
-                groupUpdate.Name = group.Name;
-
-                _hotelDbContext.Group.Update(groupUpdate);
-
-                await _hotelDbContext.SaveChangesAsync();
-            }
+            _hotelDbContext.Group.Update(group);
+            await _hotelDbContext.SaveChangesAsync();
+            return group;
         }
     }
 }

@@ -2,7 +2,6 @@
 using Kitchen.Application.Contracts.UseCases;
 using Kitchen.Application.DTOs;
 using Kitchen.Application.Error;
-using Kitchen.Domain.Contracts.UseCases;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Kitchen.Controllers
@@ -26,9 +25,9 @@ namespace Kitchen.Controllers
                     return BadRequest(validation.Errors.ToCustomValidationFailure());
                 }
 
-                await _categoryUseCase.AddCategory(input);
+                var category = await _categoryUseCase.AddCategory(input);
 
-                return Ok();
+                return Ok(category);
             } catch (Exception ex)
             {
                 return StatusCode(500, "Internal server error" + ex.Message);
@@ -55,9 +54,9 @@ namespace Kitchen.Controllers
         {
             try
             {
-                await _categoryUseCase.DeleteById(id);
+                var category = await _categoryUseCase.DeleteById(id);
 
-                return Ok();
+                return Ok(category);
             }
             catch (Exception ex)
             {
@@ -70,8 +69,8 @@ namespace Kitchen.Controllers
         {
             try
             {
-                await _categoryUseCase.UpdateById(id, category);
-                return Ok();
+                var categoryUpdated = await _categoryUseCase.UpdateById(id, category);
+                return Ok(categoryUpdated);
             } catch (Exception ex)
             {
                 return StatusCode(500, "Internal server error" + ex.Message);

@@ -1,6 +1,4 @@
-﻿using Kitchen.Application.Contracts.UseCases;
-using Kitchen.Application.DTOs;
-using Kitchen.Application.DTOs.Product;
+﻿using Kitchen.Application.DTOs;
 using Kitchen.Domain.Contracts;
 using Kitchen.Domain.Contracts.UseCases;
 using Kitchen.Domain.Entities;
@@ -20,29 +18,22 @@ namespace Kitchen.Infra.Repositories
 
         public async Task<Category> AddCategory(Category category)
         {
-            var categoryCreated = await _hotelDbContext.Category.AddAsync(category);
+            await _hotelDbContext.Category.AddAsync(category);
             await _hotelDbContext.SaveChangesAsync();
-
-            return categoryCreated.Entity ;
+            return category;
         }
 
-        public async Task<Category> DeleteById(Guid id)
+        public async Task<Category> DeleteById(Category category)
         {
-            var category = await GetById(id);
-            
-            if (category != null)
-            {
-                _hotelDbContext.Category.Remove(category);
-                await _hotelDbContext.SaveChangesAsync();
-            }
-
+            _hotelDbContext.Category.Remove(category);
+            await _hotelDbContext.SaveChangesAsync();
             return category;
         }
 
         public async Task<Category> GetById(Guid id)
         {
-            var category = await _hotelDbContext.Category.FirstOrDefaultAsync(c => c.Id == id);
-            return category;
+            return await _hotelDbContext.Category
+                .FirstOrDefaultAsync(c => c.Id == id);
         }
 
         public async Task<Category> GetByName(string name)
@@ -84,13 +75,15 @@ namespace Kitchen.Infra.Repositories
                .Take(pageSize)
                .ToListAsync();
 
+            var categoryDtos = categories.Select(c => new CategoryDto
+            {
+                Id = c.Id,
+                Name = c.Name
+            }).ToList();
+
             return new FindCategoriesResponse
             {
-                Categories = categories.Select(c => new CategoryDto
-                { 
-                    Id = c.Id,
-                    Name = c.Name,
-                }).ToList(),
+                Categories = categoryDtos,
                 TotalPages = totalPages,
                 TotalItems = totalItems
             };

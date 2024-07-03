@@ -1,8 +1,6 @@
-﻿using Kitchen.Application.DTOs;
-
-namespace Kitchen.Application.Contracts.UseCases
+﻿namespace Kitchen.Application.DTOs
 {
-    public class FindGroupsResponse
+    public class FindGroupsResponseDto
     {
         public List<GroupDto> Groups { get; set; }
         public int TotalPages { get; set; }

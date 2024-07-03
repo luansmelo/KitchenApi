@@ -1,14 +1,13 @@
-﻿using Kitchen.Application.DTOs.Group;
-using Kitchen.Domain.Entities;
+﻿using Kitchen.Application.DTOs;
 
 namespace Kitchen.Application.Contracts.UseCases
 {
     public interface IGroupUseCase
     {
-        Task AddGroup(GroupDto group);
-        Task<Group> GetById(Guid id);
-        Task DeleteById(Guid id);
-        Task UpdateById(Guid id, Group group);
-        Task<FindGroupsResponse> LoadAll(int page, int pageSize, string sortOrder);
+        Task<GroupDto> AddGroup(GroupDto groupDto);
+        Task<GroupDto> GetById(Guid id);
+        Task<GroupDto> DeleteById(Guid id);
+        Task<GroupDto> UpdateById(Guid id, GroupDto group);
+        Task<FindGroupsResponseDto> LoadAll(int page, int pageSize, string sortOrder);
     }
 }

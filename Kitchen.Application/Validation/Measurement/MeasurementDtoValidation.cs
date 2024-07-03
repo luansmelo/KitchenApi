@@ -1,5 +1,4 @@
 ﻿using FluentValidation;
-using Kitchen.Application.DTOs.Group;
 using Kitchen.Application.DTOs.Measurement;
 
 namespace Kitchen.Application.Validation.Measurement

@@ -1,14 +1,17 @@
 ﻿using Kitchen.Domain.Contracts.Repositories;
 using Kitchen.Application.Contracts.UseCases;
 using Kitchen.Domain.Entities;
-using Kitchen.Application.DTOs.Group;
+using Kitchen.Application.DTOs;
+using AutoMapper;
 
 namespace Kitchen.Application.UseCases
 {
-    public class GroupUseCase(IGroupRepository groupRepository) : IGroupUseCase
+    public class GroupUseCase(IGroupRepository groupRepository, IMapper mapper) : IGroupUseCase
     {
         private readonly IGroupRepository _groupRepository = groupRepository;
-        public async Task AddGroup(GroupDto group)
+        private readonly IMapper _mapper = mapper;
+
+        public async Task<GroupDto> AddGroup(GroupDto group)
         {
             var groupExists = await _groupRepository.GetByName(group.Name);
 
@@ -17,35 +20,48 @@ namespace Kitchen.Application.UseCases
                 throw new Exception("Grupo já cadastrado");
             }
 
-            var groupEntity = new Group(group.Name);
+            var groupMapper = _mapper.Map<Group>(group);
 
-            await _groupRepository.AddGroup(groupEntity);
+            var groupCreated = await _groupRepository.AddGroup(groupMapper);
+
+            return _mapper.Map<GroupDto>(groupCreated);
         }
 
-        public async Task DeleteById(Guid id)
+        public async Task<GroupDto> DeleteById(Guid id)
         {
             var group = await GetById(id);
 
-            await _groupRepository.DeleteById(group.Id);
+            var groupMapper = _mapper.Map<Group>(group);
+
+            var groupDelete = await _groupRepository.DeleteById(groupMapper);
+
+            return _mapper.Map<GroupDto>(groupDelete);
         }
 
-        public async Task<Group> GetById(Guid id)
+        public async Task<GroupDto> GetById(Guid id)
         {
-            var group = await _groupRepository.GetById(id) ?? throw new Exception("Grupo não encontrado");
+            var group = await _groupRepository.GetById(id) 
+                ?? throw new Exception("Grupo não encontrado");
 
-            return new Group() {  Name = group.Name };
+            return _mapper.Map<GroupDto>(group);
         }
 
-        public async Task<FindGroupsResponse> LoadAll(int page, int pageSize, string sortOrder)
+        public async Task<FindGroupsResponseDto> LoadAll(int page, int pageSize, string sortOrder)
         {
-            return await _groupRepository.LoadAll(page, pageSize, sortOrder);
+            var groups = await _groupRepository.LoadAll(page, pageSize, sortOrder);
+
+            return _mapper.Map<FindGroupsResponseDto>(groups);
         }
 
-        public async Task UpdateById(Guid id, Group group)
+        public async Task<GroupDto> UpdateById(Guid id, GroupDto group)
         {
-            var groupExist = await GetById(id);
+            await GetById(id);
 
-            await _groupRepository.UpdateById(groupExist.Id, group);
+            var groupMapper = _mapper.Map<Group>(group);
+          
+            var groupUpdated = await _groupRepository.UpdateById(groupMapper);
+
+            return _mapper.Map<GroupDto>(groupUpdated);
         }
     }
 }

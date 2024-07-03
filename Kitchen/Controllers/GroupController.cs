@@ -1,8 +1,7 @@
 ﻿using FluentValidation;
 using Kitchen.Application.Contracts.UseCases;
-using Kitchen.Application.DTOs.Group;
+using Kitchen.Application.DTOs;
 using Kitchen.Application.Error;
-using Kitchen.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Kitchen.Controllers
@@ -26,9 +25,9 @@ namespace Kitchen.Controllers
                     return BadRequest(validation.Errors.ToCustomValidationFailure());
                 }
 
-                await _groupUseCase.AddGroup(input);
+                var group = await _groupUseCase.AddGroup(input);
 
-                return Ok();
+                return Ok(group);
             }
             catch (Exception ex)
             {
@@ -56,9 +55,9 @@ namespace Kitchen.Controllers
         {
             try
             {
-                await _groupUseCase.DeleteById(id);
+                var group = await _groupUseCase.DeleteById(id);
 
-                return Ok();
+                return Ok(group);
             }
             catch (Exception ex)
             {
@@ -67,12 +66,12 @@ namespace Kitchen.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateById(Guid id, Group group)
+        public async Task<IActionResult> UpdateById(Guid id, GroupDto group)
         {
             try
             {
-                await _groupUseCase.UpdateById(id, group);
-                return Ok();
+                var groupUpdated = await _groupUseCase.UpdateById(id, group);
+                return Ok(groupUpdated);
             }
             catch (Exception ex)
             {
@@ -81,7 +80,7 @@ namespace Kitchen.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<FindGroupsResponse>> GetAll(int page = 1, int pageSize = 10, string sortOrder = "asc")
+        public async Task<ActionResult<FindGroupsResponseDto>> GetAll(int page = 1, int pageSize = 10, string sortOrder = "asc")
         {
             try
             {
