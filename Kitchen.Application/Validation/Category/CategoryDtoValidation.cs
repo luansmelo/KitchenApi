@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using Kitchen.Application.DTOs.Category;
+using Kitchen.Application.DTOs;
 
 namespace Kitchen.Application.Validation
 {

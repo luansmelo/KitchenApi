@@ -37,7 +37,7 @@ namespace Kitchen.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Group>> GetById(Guid id)
+        public async Task<ActionResult<GroupDto>> GetById(Guid id)
         {
             try
             {

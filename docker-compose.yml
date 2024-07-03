@@ -1,0 +1,23 @@
+version: '3.4'
+
+services:
+  kitchen.api:
+    image: ${DOCKER_REGISTRY-}kitchenapi
+    build:
+      context: .
+      dockerfile: Kitchen/Dockerfile
+    ports:
+       - "5000:5000"
+       - "5001:5001"
+    depends_on:
+       - kitchen.database
+
+  kitchen.database:
+    image: postgres:latest
+    container_name: kitchen.database
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    ports:
+        - 5432:5432

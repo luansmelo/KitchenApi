@@ -69,8 +69,6 @@ namespace Kitchen.Infra.Repositories
             return menu;
         }
 
-
-
         public async Task AddProduct(MenuSelections menu)
         {
             await _hotelDbContext.MenuSelections.AddAsync(menu);

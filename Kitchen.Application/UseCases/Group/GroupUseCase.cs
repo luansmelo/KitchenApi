@@ -33,7 +33,7 @@ namespace Kitchen.Application.UseCases
         {
             var group = await _groupRepository.GetById(id) ?? throw new Exception("Grupo não encontrado");
 
-            return await _groupRepository.GetById(group.Id);
+            return new Group() {  Name = group.Name };
         }
 
         public async Task<FindGroupsResponse> LoadAll(int page, int pageSize, string sortOrder)

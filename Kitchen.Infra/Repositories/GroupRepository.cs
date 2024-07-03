@@ -71,7 +71,10 @@ namespace Kitchen.Infra.Repositories
 
             return new FindGroupsResponse
             {
-                Groups = groups.Select(c => new Group { Id = c.Id, Name = c.Name }).ToList(),
+                Groups = groups.Select(c => new Group { 
+                //    Id = c.Id,
+                    Name = c.Name
+                }).ToList(),
                 TotalPages = totalPages,
                 TotalItems = totalItems
             };

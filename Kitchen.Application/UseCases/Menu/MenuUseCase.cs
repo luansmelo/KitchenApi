@@ -62,12 +62,15 @@ namespace Kitchen.Application.UseCases
 
         public async Task<MenuResponse> GetByMenu(Guid menuId, Guid categoryId, string weekDay)
         {
-            var menu = await _menuRepository.GetByMenu(new FindMenuDto
+
+            var findMenu = new FindMenuDto
             {
                 WeekDay = weekDay.ToUpper(),
                 MenuId = menuId,
                 CategoryId = categoryId,
-            }) ?? throw new Exception("Menu não encontrado");
+            };
+
+            var menu = await _menuRepository.GetByMenu(findMenu) ?? throw new Exception("Menu não encontrado");
 
             var mappedMenu = new MenuResponse
             {

@@ -4,9 +4,13 @@
     {
         public string Name { get; set; } = string.Empty;
         public ICollection<MenuSelections> MenuSelections { get; set; } = [];
-        public Category() { }
         public Category(string name)
         {
+            Name = name;
+        }
+
+        public Category(Guid id, string name) {
+            Id = id;
             Name = name;
         }
     }

@@ -1,9 +1,8 @@
 ﻿using FluentValidation;
 using Kitchen.Application.Contracts.UseCases;
-using Kitchen.Application.DTOs.Category;
+using Kitchen.Application.DTOs;
 using Kitchen.Application.Error;
 using Kitchen.Domain.Contracts.UseCases;
-using Kitchen.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Kitchen.Controllers
@@ -37,7 +36,7 @@ namespace Kitchen.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Category>> GetById(Guid id)
+        public async Task<ActionResult<CategoryDto>> GetById(Guid id)
         {
             try
             {
@@ -67,7 +66,7 @@ namespace Kitchen.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateById(Guid id, Category category)
+        public async Task<IActionResult> UpdateById(Guid id, CategoryDto category)
         {
             try
             {
@@ -80,7 +79,7 @@ namespace Kitchen.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<FindCategoriesResponse>> GetAll(int page = 1, int pageSize = 10, string sortOrder = "asc")
+        public async Task<ActionResult<FindCategoriesResponseDto>> GetAll(int page = 1, int pageSize = 10, string sortOrder = "asc")
         {
             try
             {

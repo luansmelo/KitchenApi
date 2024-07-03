@@ -80,7 +80,7 @@ namespace Kitchen.Infra.Repositories
                     Code = c.Code,
                     Measurement = new Measurement()
                     {
-                        Id = c.Measurement.Id,
+                        //Id = c.Measurement.Id,
                         Name = c.Measurement.Name
                     },
                     UnitPrice = c.UnitPrice,

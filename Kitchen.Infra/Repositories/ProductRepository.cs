@@ -119,7 +119,7 @@ namespace Kitchen.Infra.Repositories
                     UnitPrice = iop.Ingredient.UnitPrice,
                     Measurement = new Measurement
                     {
-                        Id = iop.Ingredient.Measurement.Id,
+                        //Id = iop.Ingredient.Measurement.Id,
                         Name = iop.Ingredient.Measurement.Name
                     },
                     Groups = iop.Ingredient.GroupsOnIngredient.Select(groupOnIngredient => new GroupResponse

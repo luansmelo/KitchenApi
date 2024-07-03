@@ -1,4 +1,7 @@
-﻿using Kitchen.Domain.Contracts;
+﻿using Kitchen.Application.Contracts.UseCases;
+using Kitchen.Application.DTOs;
+using Kitchen.Application.DTOs.Product;
+using Kitchen.Domain.Contracts;
 using Kitchen.Domain.Contracts.UseCases;
 using Kitchen.Domain.Entities;
 using Kitchen.Infra.KitchenConnectionContext;
@@ -15,13 +18,15 @@ namespace Kitchen.Infra.Repositories
             _hotelDbContext = hotelDbContext;
         }
 
-        public async Task AddCategory(Category category)
+        public async Task<Category> AddCategory(Category category)
         {
-            await _hotelDbContext.Category.AddAsync(category);
+            var categoryCreated = await _hotelDbContext.Category.AddAsync(category);
             await _hotelDbContext.SaveChangesAsync();
+
+            return categoryCreated.Entity ;
         }
 
-        public async Task DeleteById(Guid id)
+        public async Task<Category> DeleteById(Guid id)
         {
             var category = await GetById(id);
             
@@ -30,6 +35,8 @@ namespace Kitchen.Infra.Repositories
                 _hotelDbContext.Category.Remove(category);
                 await _hotelDbContext.SaveChangesAsync();
             }
+
+            return category;
         }
 
         public async Task<Category> GetById(Guid id)
@@ -45,7 +52,7 @@ namespace Kitchen.Infra.Repositories
                 .FirstOrDefaultAsync(c => c.Name == name);
         }
 
-        public async Task UpdateById(Guid id, Category category)
+        public async Task<Category> UpdateById(Guid id, Category category)
         {
             var categoryUpdate = await GetById(id);
             if (categoryUpdate != null)
@@ -57,6 +64,8 @@ namespace Kitchen.Infra.Repositories
 
               await _hotelDbContext.SaveChangesAsync();
             }
+
+            return categoryUpdate;
         }
 
         public async Task<FindCategoriesResponse> LoadAll(int page, int pageSize, string sortOrder)
@@ -77,7 +86,11 @@ namespace Kitchen.Infra.Repositories
 
             return new FindCategoriesResponse
             {
-                Categories = categories.Select(c => new Category { Id = c.Id, Name = c.Name }).ToList(),
+                Categories = categories.Select(c => new CategoryDto
+                { 
+                    Id = c.Id,
+                    Name = c.Name,
+                }).ToList(),
                 TotalPages = totalPages,
                 TotalItems = totalItems
             };

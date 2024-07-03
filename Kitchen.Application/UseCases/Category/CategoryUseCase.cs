@@ -1,16 +1,17 @@
-﻿using Kitchen.Application.Contracts.UseCases;
-using Kitchen.Application.DTOs.Category;
+﻿using AutoMapper;
+using Kitchen.Application.Contracts.UseCases;
+using Kitchen.Application.DTOs;
 using Kitchen.Domain.Contracts;
-using Kitchen.Domain.Contracts.UseCases;
 using Kitchen.Domain.Entities;
-
+    
 namespace Kitchen.Application.UseCases
 {
-    public class CategoryUseCase(ICategoryRepository categoryRepository) : ICategoryUseCase
+    public class CategoryUseCase(ICategoryRepository categoryRepository, IMapper mapper) : ICategoryUseCase
     {
         private readonly ICategoryRepository _categoryRepository = categoryRepository;
+        private readonly IMapper _mapper = mapper;
 
-        public async Task AddCategory(CategoryDto category)
+        public async Task<CategoryDto> AddCategory(CategoryDto category)
         {
             var categoryExists = await _categoryRepository.GetByName(category.Name);
 
@@ -19,34 +20,46 @@ namespace Kitchen.Application.UseCases
                 throw new Exception("Categoria já cadastrada");
             }
 
-            var categoryEntity = new Category(category.Name);
+            var categoryMapper = _mapper.Map<Category>(category);
 
-            await _categoryRepository.AddCategory(categoryEntity);
+            var createdCategory = await _categoryRepository.AddCategory(categoryMapper);
+
+            return _mapper.Map<CategoryDto>(createdCategory);
         }
 
-        public async Task DeleteById(Guid id)
+        public async Task<CategoryDto> DeleteById(Guid id)
         {
-            var category = await GetById(id);
-
-            await _categoryRepository.DeleteById(category.Id);
-        }
-
-        public async Task<Category> GetById(Guid id)
-        {
-            return await _categoryRepository.GetById(id) 
+            var category = await _categoryRepository.GetById(id)
                 ?? throw new Exception("Categoria não encontrada");
+
+            var categoryRemoved = await _categoryRepository.DeleteById(category.Id);
+
+            return _mapper.Map<CategoryDto>(categoryRemoved);
         }
 
-        public async Task<FindCategoriesResponse> LoadAll(int page, int pageSize, string sortOrder)
+        public async Task<CategoryDto> GetById(Guid id)
         {
-            return await _categoryRepository.LoadAll(page, pageSize, sortOrder);
+            var category = await _categoryRepository.GetById(id)
+                ?? throw new Exception("Categoria não encontrada");
+
+            return _mapper.Map<CategoryDto>(category);
         }
 
-        public async Task UpdateById(Guid id, Category category)
+        public async Task<FindCategoriesResponseDto> LoadAll(int page, int pageSize, string sortOrder)
         {
-            var categoryExist = await GetById(id);
+            var categories = await _categoryRepository.LoadAll(page, pageSize, sortOrder);
+            return _mapper.Map<FindCategoriesResponseDto>(categories);
+        }
 
-            await _categoryRepository.UpdateById(categoryExist.Id, category);
+        public async Task<CategoryDto> UpdateById(Guid id, CategoryDto category)
+        { 
+            var categoryExist = await _categoryRepository.GetById(id)
+                ?? throw new Exception("Categoria não encontrada");
+
+            var categoryMapper = _mapper.Map<Category>(categoryExist);
+            var categoryUpdated = await _categoryRepository.UpdateById(categoryExist.Id, categoryMapper);
+
+            return _mapper.Map<CategoryDto>(categoryUpdated);
         }
     }
 }

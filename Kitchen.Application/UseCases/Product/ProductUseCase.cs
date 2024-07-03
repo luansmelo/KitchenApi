@@ -48,7 +48,7 @@ namespace Kitchen.Application.UseCases
                 UnitPrice = i.Ingredient.UnitPrice,
                 Measurement = new Measurement()
                 {
-                    Id = i.Ingredient.Measurement.Id,
+                   // Id = i.Ingredient.Measurement.Id,
                     Name = i.Measurement,
                 },
                 Grammage = i.Grammage,

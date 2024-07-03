@@ -73,7 +73,10 @@ namespace Kitchen.Infra.Repositories
 
             return new FindMeasuresResponse
             {
-                Measures = measures.Select(c => new Measurement { Id = c.Id, Name = c.Name }).ToList(),
+                Measures = measures.Select(c => new Measurement {
+                    //Id = c.Id,
+                    Name = c.Name
+                }).ToList(),
                 TotalPages = totalPages,
                 TotalItems = totalItems
             };
