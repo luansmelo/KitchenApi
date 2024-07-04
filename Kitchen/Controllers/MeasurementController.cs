@@ -26,9 +26,9 @@ namespace Kitchen.Controllers
                     return BadRequest(validation.Errors.ToCustomValidationFailure());
                 }
 
-                await _measurementUseCase.AddMeasurement(input);
+                var measurement = await _measurementUseCase.AddMeasurement(input);
 
-                return Ok();
+                return Ok(measurement);
             }
             catch (Exception ex)
             {
@@ -56,9 +56,9 @@ namespace Kitchen.Controllers
         {
             try
             {
-                await _measurementUseCase.DeleteById(id);
+                var measurement = await _measurementUseCase.DeleteById(id);
 
-                return Ok();
+                return Ok(measurement);
             }
             catch (Exception ex)
             {
@@ -67,12 +67,12 @@ namespace Kitchen.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateById(Guid id, Measurement measurement)
+        public async Task<IActionResult> UpdateById(Guid id, MeasurementDto measurement)
         {
             try
             {
-                await _measurementUseCase.UpdateById(id, measurement);
-                return Ok();
+                var measurementCreated = await _measurementUseCase.UpdateById(id, measurement);
+                return Ok(measurementCreated);
             }
             catch (Exception ex)
             {

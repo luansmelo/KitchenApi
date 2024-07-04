@@ -2,92 +2,67 @@
 using Kitchen.Application.Contracts.UseCases;
 using Kitchen.Domain.Entities;
 using Kitchen.Application.DTOs.Product;
+using AutoMapper;
 
 namespace Kitchen.Application.UseCases
 {
-    public class ProductUseCase(IProductRepository productRepository) : IProductUseCase
+    public class ProductUseCase(IProductRepository productRepository, IMapper mapper) : IProductUseCase
     {
-
         private readonly IProductRepository _productRepository = productRepository;
+        private readonly IMapper _mapper = mapper;
+
         public async Task AddInputToProduct(AddIngredientToProductInput product)
         {
             await GetById(product.ProductId);
+
             await _productRepository.AddInputToProduct(product);
         }
 
-        public async Task AddProduct(ProductDto input)
+        public async Task<ProductDto> AddProduct(ProductDto product)
         {
-            var product = new Product()
-            {
-                Name = input.Name,
-                Description = input.Description,
-                Accession = input.Accession,
-                PreparationTime = input.PreparationTime,
-                Resource = input.Resource,
-            };
+            var productMapper = _mapper.Map<Product>(product);
 
-            await _productRepository.AddProduct(product);
+            var productCreated = await _productRepository.AddProduct(productMapper);
+
+            return _mapper.Map<ProductDto>(productCreated);
         }
 
-        public async Task DeleteById(Guid id)
+        public async Task<ProductDto> DeleteById(Guid id)
         {
-            await GetById(id);
-            await _productRepository.DeleteById(id);
+            var product = await GetById(id);
+
+            var productMapper = _mapper.Map<Product>(product);
+
+            var productDeleted = await _productRepository.DeleteById(productMapper);
+
+            return _mapper.Map<ProductDto>(productDeleted);
         }
 
-        public async Task<ProductResponse> GetById(Guid id)
+        public async Task<ProductResponseDto> GetById(Guid id)
         {
             var product = await _productRepository.GetById(id)
                 ?? throw new Exception("Produto não encontrado");
 
-            var ingredients = product.IngredientsOnProduct.Select(i => new IngredientResponse()
-            {
-                Id = i.Ingredient.Id,
-                Name = i.Ingredient.Name,
-                Code = i.Ingredient.Code,
-                UnitPrice = i.Ingredient.UnitPrice,
-                Measurement = new Measurement()
-                {
-                   // Id = i.Ingredient.Measurement.Id,
-                    Name = i.Measurement,
-                },
-                Grammage = i.Grammage,
-                Groups = i.Ingredient.GroupsOnIngredient.Select(g => new GroupResponse()
-                {
-                    Id = g.Group.Id,
-                    Name = g.Group.Name,
-                }).ToList(),
-            }).ToList();
-
-            var productResponse = new ProductResponse
-            {
-                Id = product.Id,
-                Name = product.Name,
-                Description = product.Description,
-                Accession = product.Accession,
-                PreparationTime = product.PreparationTime,
-                Resource = product.Resource,
-                Ingredients = ingredients,
-            };
-
-            return productResponse;
+            return _mapper.Map<ProductResponseDto>(product);
         }
 
-        public async Task<FindProductResponse> LoadAll(int page, int pageSize, string sortOrder)
+        public async Task<FindProductsResponseDto> LoadAll(int page, int pageSize, string sortOrder)
         {
-            return await _productRepository.LoadAll(page, pageSize, sortOrder);
+            var products = await _productRepository.LoadAll(page, pageSize, sortOrder);
+
+            return _mapper.Map<FindProductsResponseDto>(products);
         }
 
-        public async Task RemoveInputToProduct(RemoveInputToProduct product)
+        public async Task RemoveInputToProduct(Guid productId, Guid ingredientId)
         {
-            await GetById(product.ProductId);
-            await _productRepository.RemoveInputToProduct(product);
+            await GetById(productId);
+            await _productRepository.RemoveInputToProduct(productId, ingredientId);
         }
 
-        public async Task UpdateById(Guid id, UpdateProduct product)
+        public async Task UpdateById(Guid id, UpdateProduct productDto)
         {
             await GetById(id);
-            await _productRepository.UpdateById(id, product);
+            await _productRepository.UpdateById(id, productDto);
         }
     }
 }

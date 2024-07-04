@@ -65,12 +65,12 @@ namespace Kitchen.Controllers
             }
         }
 
-        [HttpDelete("remove/ingredient")]
-        public async Task<IActionResult> DeleteIngredient(RemoveInputToProduct product)
+        [HttpDelete("remove/{productId}/ingredient/{ingredientId}")]
+        public async Task<IActionResult> DeleteIngredient(Guid productId, Guid ingredientId)
         {
             try
             {
-                await _productUseCase.RemoveInputToProduct(product);
+                await _productUseCase.RemoveInputToProduct(productId, ingredientId);
 
                 return Ok();
             }
@@ -81,7 +81,7 @@ namespace Kitchen.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<ProductResponse>> GetById(Guid id)
+        public async Task<ActionResult<FindProductsResponseDto>> GetById(Guid id)
         {
             try
             {
@@ -96,7 +96,7 @@ namespace Kitchen.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<FindProductResponse>> GetAll(int page = 1, int pageSize = 10, string sortOrder = "asc")
+        public async Task<ActionResult<FindProductsResponse>> GetAll(int page = 1, int pageSize = 10, string sortOrder = "asc")
         {
             try
             {

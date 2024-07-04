@@ -4,12 +4,12 @@ namespace Kitchen.Application.Contracts.UseCases
 {
     public interface IProductUseCase
     {
-        Task AddProduct(ProductDto product);
-        Task<ProductResponse> GetById(Guid id);
-        Task DeleteById(Guid id);
+        Task<ProductDto> AddProduct(ProductDto productDto);
+        Task<ProductResponseDto> GetById(Guid id);
+        Task<ProductDto> DeleteById(Guid id);
         Task UpdateById(Guid id, UpdateProduct product);
-        Task<FindProductResponse> LoadAll(int page, int pageSize, string sortOrder);
+        Task<FindProductsResponseDto> LoadAll(int page, int pageSize, string sortOrder);
         Task AddInputToProduct(AddIngredientToProductInput product);
-        Task RemoveInputToProduct(RemoveInputToProduct product);
+        Task RemoveInputToProduct(Guid productId, Guid ingredientId);
     }
 }

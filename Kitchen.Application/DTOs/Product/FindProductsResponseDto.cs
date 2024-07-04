@@ -1,6 +1,8 @@
-﻿namespace Kitchen.Application.Contracts.UseCases
+﻿using Kitchen.Application.Contracts.UseCases;
+
+namespace Kitchen.Application.DTOs.Product
 {
-    public class FindProductResponse
+    public class FindProductsResponseDto
     {
         public List<ProductResponse> Products { get; set; }
         public int TotalPages { get; set; }

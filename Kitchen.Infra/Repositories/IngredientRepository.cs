@@ -1,4 +1,6 @@
 ﻿using Kitchen.Application.Contracts.UseCases;
+using Kitchen.Application.DTOs;
+using Kitchen.Application.DTOs.Measurement;
 using Kitchen.Domain.Contracts.Repositories;
 using Kitchen.Domain.Entities;
 using Kitchen.Infra.KitchenConnectionContext;
@@ -78,14 +80,14 @@ namespace Kitchen.Infra.Repositories
                     Id = c.Id,
                     Name = c.Name,
                     Code = c.Code,
-                    Measurement = new Measurement()
+                    Measurement = new MeasurementDto
                     {
-                        //Id = c.Measurement.Id,
+                        Id = c.Measurement.Id,
                         Name = c.Measurement.Name
                     },
                     UnitPrice = c.UnitPrice,
                     Groups = c.GroupsOnIngredient
-                    .Select(g => new GroupResponse
+                    .Select(g => new GroupDto
                     {
                         Id = g.Id,
                         Name = g.Group.Name,

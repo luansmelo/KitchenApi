@@ -3,6 +3,8 @@ using Kitchen.Application.Contracts.UseCases;
 using Microsoft.EntityFrameworkCore;
 using Kitchen.Domain.Contracts.Repositories;
 using Kitchen.Domain.Entities;
+using Kitchen.Application.DTOs.Measurement;
+using Kitchen.Application.DTOs;
 
 namespace Kitchen.Infra.Repositories
 {
@@ -17,45 +19,39 @@ namespace Kitchen.Infra.Repositories
 
         public async Task AddInputToProduct(AddIngredientToProductInput product)
         {
-            var productEntity = await GetById(product.ProductId);
-
-            if (productEntity != null)
+            foreach (var ingredient in product.Ingredients)
             {
-                foreach (var ingredient in product.Ingredients)
+                var existingIngredient = await _hotelDbContext.Ingredient.FindAsync(ingredient.Id);
+
+                if (existingIngredient != null)
                 {
-                    var existingIngredient = await _hotelDbContext.Ingredient.FindAsync(ingredient.IngredientId);
-
-                    if (existingIngredient != null)
+                    var inputAddToProduct = new IngredientsOnProduct
                     {
-                        var inputAddToProduct = new IngredientsOnProduct
-                        {
-                            ProductId = productEntity.Id,
-                            IngredientId = ingredient.IngredientId,
-                            Measurement = ingredient.MeasurementName,
-                            Grammage = ingredient.Grammage
-                        };
+                        ProductId = product.ProductId,
+                        IngredientId = ingredient.Id,
+                        Measurement = ingredient.MeasurementName,
+                        Grammage = ingredient.Grammage
+                    };
 
-                        await _hotelDbContext.IngredientsOnProduct.AddAsync(inputAddToProduct);
-                    }                
+                    await _hotelDbContext.IngredientsOnProduct.AddAsync(inputAddToProduct);
                 }
             }
+
             await _hotelDbContext.SaveChangesAsync();
         }
 
-        public async Task AddProduct(Product product)
+        public async Task<Product> AddProduct(Product product)
         {
             await _hotelDbContext.Product.AddAsync(product);
             await _hotelDbContext.SaveChangesAsync();
+            return product;
         }
 
-        public async Task DeleteById(Guid id)
+        public async Task<Product> DeleteById(Product product)
         {
-            var product = await GetById(id);
-            if (product != null)
-            {
-                _hotelDbContext.Product.Remove(product);
-                await _hotelDbContext.SaveChangesAsync();
-            }
+            _hotelDbContext.Product.Remove(product);
+            await _hotelDbContext.SaveChangesAsync();
+            return product;
         }
 
         public async Task<Product> GetById(Guid id)
@@ -79,7 +75,7 @@ namespace Kitchen.Infra.Repositories
                 .FirstOrDefaultAsync(c => c.Name == name);
         }
 
-        public async Task<FindProductResponse> LoadAll(int page, int pageSize, string sortOrder)
+        public async Task<FindProductsResponse> LoadAll(int page, int pageSize, string sortOrder)
         {
             var query = _hotelDbContext.Product.AsQueryable();
 
@@ -117,12 +113,12 @@ namespace Kitchen.Infra.Repositories
                     Code = iop.Ingredient.Code,
                     Grammage = iop.Grammage,
                     UnitPrice = iop.Ingredient.UnitPrice,
-                    Measurement = new Measurement
+                    Measurement = new MeasurementDto
                     {
-                        //Id = iop.Ingredient.Measurement.Id,
-                        Name = iop.Ingredient.Measurement.Name
+                        Id = iop.Ingredient.Measurement.Id,
+                        Name = iop.Measurement,
                     },
-                    Groups = iop.Ingredient.GroupsOnIngredient.Select(groupOnIngredient => new GroupResponse
+                    Groups = iop.Ingredient.GroupsOnIngredient.Select(groupOnIngredient => new GroupDto
                     {
                         Id = groupOnIngredient.Group.Id,
                         Name = groupOnIngredient.Group.Name
@@ -130,7 +126,7 @@ namespace Kitchen.Infra.Repositories
                 }).ToList()
             }).ToList();
 
-            return new FindProductResponse
+            return new FindProductsResponse
             {
                 Products = productResponses,
                 TotalPages = totalPages,
@@ -138,11 +134,11 @@ namespace Kitchen.Infra.Repositories
             };
         }
 
-        public async Task RemoveInputToProduct(RemoveInputToProduct product)
+        public async Task RemoveInputToProduct(Guid productId, Guid ingredientId)
         {
             var ingredient = await _hotelDbContext
                 .IngredientsOnProduct
-                .FirstOrDefaultAsync(i => i.ProductId == product.ProductId && i.IngredientId == product.IngredientId);
+                .FirstOrDefaultAsync(i => i.ProductId == productId && i.IngredientId == ingredientId);
 
             if (ingredient != null)
             {
@@ -165,8 +161,8 @@ namespace Kitchen.Infra.Repositories
             {
                 var existingIngredient = existingProduct
                             .IngredientsOnProduct
-                            .FirstOrDefault(iop => 
-                            iop.IngredientId == ingredientInput.IngredientId && iop.ProductId == id);
+                            .FirstOrDefault(iop =>
+                            iop.IngredientId == ingredientInput.Id && iop.ProductId == id);
 
                 if (existingIngredient != null)
                 {
@@ -174,9 +170,8 @@ namespace Kitchen.Infra.Repositories
                     existingIngredient.Grammage = ingredientInput.Grammage;
                 }
             }
-            
-            _hotelDbContext.Update(existingProduct);
 
+            _hotelDbContext.Update(existingProduct);
             await _hotelDbContext.SaveChangesAsync();
         }
     }

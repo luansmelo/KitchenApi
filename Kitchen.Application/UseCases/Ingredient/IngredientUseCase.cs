@@ -2,6 +2,8 @@
 using Kitchen.Application.Contracts.UseCases;
 using Kitchen.Domain.Entities;
 using Kitchen.Application.DTOs.Ingredient;
+using Kitchen.Application.DTOs;
+using Kitchen.Application.DTOs.Measurement;
 
 namespace Kitchen.Application.UseCases
 {
@@ -53,10 +55,10 @@ namespace Kitchen.Application.UseCases
         public async Task<IngredientResponse> GetById(Guid id)
         {
             var ingredient = await _ingredientRepository.GetById(id)
-                ?? throw new Exception("Ingredient não encontrado");
+                ?? throw new Exception("Insumo não encontrado");
 
             var groups = ingredient.GroupsOnIngredient
-             .Select(g => new GroupResponse
+             .Select(g => new GroupDto
              {
                  Id = g.Id,
                  Name = g.Group.Name
@@ -68,7 +70,11 @@ namespace Kitchen.Application.UseCases
                 Name = ingredient.Name,
                 Code = ingredient.Code,
                 UnitPrice = ingredient.UnitPrice,
-                Measurement = ingredient.Measurement,
+                Measurement = new MeasurementDto
+                {
+                    Id = ingredient.Measurement.Id,
+                    Name = ingredient.Measurement.Name,
+                },
                 Groups = groups
             };
 

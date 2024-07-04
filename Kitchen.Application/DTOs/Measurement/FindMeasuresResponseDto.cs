@@ -1,8 +1,6 @@
-﻿using Kitchen.Application.DTOs.Measurement;
-
-namespace Kitchen.Application.Contracts.UseCases
+﻿namespace Kitchen.Application.DTOs.Measurement
 {
-    public class FindMeasuresResponse
+    public class FindMeasuresResponseDto
     {
         public List<MeasurementDto> Measures { get; set; }
         public int TotalPages { get; set; }

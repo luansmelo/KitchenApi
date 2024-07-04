@@ -76,6 +76,17 @@ namespace Kitchen.Infra.KitchenConnectionContext
             services.AddTransient<IValidator<ProductDto>, ProductDtoValidation>();
 
             services.AddAutoMapper(typeof(DomainToDTOMappingProfile));
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowOrigin",
+                    builder => builder
+                        .WithOrigins("http://localhost:3000")
+                        .AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader());
+            });
+
             return services;
         }
     }

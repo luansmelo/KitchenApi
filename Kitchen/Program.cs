@@ -15,9 +15,9 @@ namespace Kitchen
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
-
             var app = builder.Build();
 
+            app.UseCors("AllowOrigin");
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
@@ -26,7 +26,7 @@ namespace Kitchen
             }
 
             app.UseHttpsRedirection();
-
+         
             app.UseAuthorization();
 
             app.MapControllers();

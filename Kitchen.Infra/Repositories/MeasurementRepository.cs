@@ -1,4 +1,5 @@
 ﻿using Kitchen.Application.Contracts.UseCases;
+using Kitchen.Application.DTOs.Measurement;
 using Kitchen.Domain.Contracts.Repositories;
 using Kitchen.Domain.Entities;
 using Kitchen.Infra.KitchenConnectionContext;
@@ -10,21 +11,18 @@ namespace Kitchen.Infra.Repositories
     {
         private readonly HotelDbContext _hotelDbContext = hotelDbContext;
 
-        public async Task AddMeasurement(Measurement measurement)
+        public async Task<Measurement> AddMeasurement(Measurement measurement)
         {
             await _hotelDbContext.Measurement.AddAsync(measurement);
             await _hotelDbContext.SaveChangesAsync();
+            return measurement;
         }
 
-        public async Task DeleteById(Guid id)
+        public async Task<Measurement> DeleteById(Measurement measurement)
         {
-            var measurement = await GetById(id);
-
-            if (measurement != null)
-            {
-                _hotelDbContext.Measurement.Remove(measurement);
-                await _hotelDbContext.SaveChangesAsync();
-            }
+            _hotelDbContext.Measurement.Remove(measurement);
+            await _hotelDbContext.SaveChangesAsync();
+            return measurement;
         }
 
         public async Task<Measurement> GetById(Guid id)
@@ -41,18 +39,11 @@ namespace Kitchen.Infra.Repositories
                    .FirstOrDefaultAsync(c => c.Name == name);
         }
 
-        public async Task UpdateById(Guid id, Measurement measurement)
+        public async Task<Measurement> UpdateById(Measurement measurement)
         {
-            var measurementUpdate = await GetById(id);
-            if (measurementUpdate != null)
-            {
-
-                measurementUpdate.Name = measurement.Name;
-
-                _hotelDbContext.Measurement.Update(measurementUpdate);
-
-                await _hotelDbContext.SaveChangesAsync();
-            }
+            _hotelDbContext.Measurement.Update(measurement);
+            await _hotelDbContext.SaveChangesAsync();
+            return measurement;
         }
 
         public async Task<FindMeasuresResponse> LoadAll(int page, int pageSize, string sortOrder)
@@ -73,8 +64,8 @@ namespace Kitchen.Infra.Repositories
 
             return new FindMeasuresResponse
             {
-                Measures = measures.Select(c => new Measurement {
-                    //Id = c.Id,
+                Measures = measures.Select(c => new MeasurementDto {
+                    Id = c.Id,
                     Name = c.Name
                 }).ToList(),
                 TotalPages = totalPages,
