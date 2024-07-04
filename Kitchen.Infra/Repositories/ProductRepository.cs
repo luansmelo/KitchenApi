@@ -59,13 +59,13 @@ namespace Kitchen.Infra.Repositories
             return await _hotelDbContext
                 .Product
                 .Include(product => product.IngredientsOnProduct)
-                .ThenInclude(g => g.Ingredient)
+                .ThenInclude(iop => iop.Ingredient)
                 .ThenInclude(ingredient => ingredient.Measurement)
                 .Include(product => product.IngredientsOnProduct)
-                .ThenInclude(g => g.Ingredient)
+                .ThenInclude(iop => iop.Ingredient)
                 .ThenInclude(ingredient => ingredient.GroupsOnIngredient)
-                .ThenInclude(groupOnIngredient => groupOnIngredient.Group)
-                .FirstOrDefaultAsync(c => c.Id == id); 
+                .ThenInclude(goi => goi.Group)
+                .SingleOrDefaultAsync(p => p.Id == id);
         }
 
         public async Task<Product> GetByName(string name)
@@ -87,13 +87,13 @@ namespace Kitchen.Infra.Repositories
             var products = await query
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
-                .Include(p => p.IngredientsOnProduct)
+                .Include(product => product.IngredientsOnProduct)
                 .ThenInclude(iop => iop.Ingredient)
                 .ThenInclude(ingredient => ingredient.Measurement)
-                .Include(p => p.IngredientsOnProduct)
+                .Include(product => product.IngredientsOnProduct)
                 .ThenInclude(iop => iop.Ingredient)
                 .ThenInclude(ingredient => ingredient.GroupsOnIngredient)
-                .ThenInclude(groupOnIngredient => groupOnIngredient.Group)
+                .ThenInclude(goi => goi.Group)
                 .ToListAsync();
 
             var productResponses = products.Select(product => new ProductResponse

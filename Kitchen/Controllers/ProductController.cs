@@ -96,7 +96,7 @@ namespace Kitchen.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<FindProductsResponse>> GetAll(int page = 1, int pageSize = 10, string sortOrder = "asc")
+        public async Task<ActionResult<FindProductsResponseDto>> GetAll(int page = 1, int pageSize = 10, string sortOrder = "asc")
         {
             try
             {
