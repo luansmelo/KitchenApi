@@ -36,10 +36,10 @@ public static class DependencyInject
         services.AddControllers();
         services.AddScoped<ICategoryRepository, CategoryRepository>();
         services.AddScoped<IGroupRepository, GroupRepository>();
-         /* services.AddScoped<IMeasurementRepository, MeasurementRepository>();
-          services.AddScoped<IIngredientRepository, IngredientRepository>();
-          services.AddScoped<IProductRepository, ProductRepository>();
-          services.AddScoped<IMenuRepository, MenuRepository>();*/
+        services.AddScoped<IMeasurementRepository, MeasurementRepository>();
+ /* services.AddScoped<IIngredientRepository, IngredientRepository>();
+services.AddScoped<IProductRepository, ProductRepository>();
+services.AddScoped<IMenuRepository, MenuRepository>();*/
     
         services.AddCors(options =>
         {

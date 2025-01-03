@@ -1,56 +1,90 @@
-﻿using Kitchen.Domain.Entities;
+﻿using Dapper;
+using Kitchen.Domain.Entities;
 using Kitchen.Domain.Interfaces;
+using Kitchen.Infra.Context;
+using Kitchen.Infra.Queries;
 
 namespace Kitchen.Infra.Repositories;
 
-public class MeasurementRepository(Context.DbContext dbContext) : IMeasurementRepository
+public class MeasurementRepository(IDbContext dbContext) : IMeasurementRepository
 {
-    private readonly Context.DbContext _dbContext = dbContext;
-
     public async Task<Measurement> AddMeasurement(Measurement measurement)
     {
-        return null;
+        var query = MeasurementQueries.AddMeasurementQuery;
+        var parameters = new DynamicParameters();
+        parameters.Add("@Name", measurement.Name);
+        
+        using var connection = dbContext.Connection();
+        var result = await connection.QueryAsync<Measurement>(query, parameters);
+        
+        return result.SingleOrDefault();
     }
 
- /*   public async Task<Measurement> DeleteById(Measurement measurement)
+    public async Task<Measurement> DeleteById(Measurement measurement)
     {
-        _dbContext.Measurement.Remove(measurement);
-        await _dbContext.SaveChangesAsync();
-        return measurement;
+        var query = MeasurementQueries.DeleteByIdQuery;
+        var parameters = new DynamicParameters();
+        parameters.Add("@Id", measurement.Id);
+        
+        using var connection = dbContext.Connection();
+        var result = await connection.QueryAsync<Measurement>(query, parameters);
+        
+        return result.SingleOrDefault();
     }
 
     public async Task<Measurement?> GetById(Guid id)
     {
-        return await _dbContext
-           .Measurement
-           .FirstOrDefaultAsync(c => c.Id == id);
+        var query = MeasurementQueries.GetByIdQuery;
+        var parameters = new DynamicParameters();
+        
+        parameters.Add("@Id", id);
+        
+        using var connection = dbContext.Connection();
+        var result = await connection.QueryAsync<Measurement>(query, parameters);
+        
+        return result.SingleOrDefault();
     }
 
     public async Task<Measurement?> GetByName(string name)
     {
-        return await _dbContext
-               .Measurement
-               .FirstOrDefaultAsync(c => c.Name == name);
-    }
-
-    public async Task<Measurement> UpdateById(Measurement measurement)
-    {
-        _dbContext.Measurement.Update(measurement);
-        await _dbContext.SaveChangesAsync();
-        return measurement;
-    }
-
-    public async Task<PagedList<Measurement>> LoadAll(int pageNumber, int pageSize, string sortBy)
-    {
-        var query = _dbContext.Measurement.AsQueryable();
-       
-        if (!string.IsNullOrEmpty(sortBy))
-        {
-            query = sortBy.Equals("desc", StringComparison.CurrentCultureIgnoreCase) 
-                ? query.OrderByDescending(c => c.Name) 
-                : query.OrderBy(c => c.Name);
-        }
+        var query = MeasurementQueries.GetByNameQuery;
+        var parameters = new DynamicParameters();
         
-        return await PaginationHelper.CreateAsync(query, pageNumber, pageSize);
-    }*/
+        parameters.Add("@Name", name);
+        
+        using var connection = dbContext.Connection();
+        var result = await connection.QueryAsync<Measurement>(query, parameters);
+        return result.SingleOrDefault();
+    }
+
+    public async Task<Measurement> UpdateById(Guid id, Measurement measurement)
+    {
+        var query = MeasurementQueries.UpdateByIdQuery;
+        var parameters = new DynamicParameters();
+        
+        parameters.Add("@Id", id);
+        parameters.Add("@Name", measurement.Name);
+        
+        using var connection = dbContext.Connection();
+        var result = await connection.QueryAsync<Measurement>(query, parameters);
+        return result.SingleOrDefault();
+    }
+
+    public async Task<(IEnumerable<Measurement> measurements, int totalCount)> LoadAll(int pageNumber, int pageSize, string order)
+    {
+        var query = MeasurementQueries.GetAllQuery(order);
+        var parameters = new DynamicParameters();
+       
+        var offset = (pageNumber - 1) * pageSize;
+        
+        parameters.Add("@PageSize", pageSize);
+        parameters.Add("@OffSet", offset);
+        
+        using var connection = dbContext.Connection();
+        var measurements = await connection.QueryAsync<Measurement>(query, parameters);
+
+        var countQuery = MeasurementQueries.GetCountQuery;
+        var totalCount = await connection.ExecuteScalarAsync<int>(countQuery);
+        return (measurements, totalCount);
+    }
 }
