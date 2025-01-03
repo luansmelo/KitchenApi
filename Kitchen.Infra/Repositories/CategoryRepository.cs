@@ -1,7 +1,6 @@
 ﻿using Dapper;
 using Kitchen.Domain.Entities;
 using Kitchen.Domain.Interfaces;
-using Kitchen.Domain.Pagination;
 using Kitchen.Infra.Context;
 using Kitchen.Infra.Queries;
 
@@ -22,7 +21,7 @@ public class CategoryRepository(IDbContext dbContext) : ICategoryRepository
         return result.FirstOrDefault();
     }
 
-    public async Task<Category> DeleteById(Guid id)
+    public async Task<Category?> DeleteById(Guid id)
     {
         var query = CategoryQueries.DeleteByIdQuery;
         var parameters = new DynamicParameters();
@@ -58,12 +57,13 @@ public class CategoryRepository(IDbContext dbContext) : ICategoryRepository
         return result;
     }
 
-    public async Task<Category> UpdateById(Guid id, Category category)
+    public async Task<Category?> UpdateById(Guid id, Category category)
     {
         var query = CategoryQueries.UpdateByIdQuery;
         var parameters = new DynamicParameters();
         
         parameters.Add("@Id", id);
+        parameters.Add("@Name", category.Name);
         
         using var connection = dbContext.Connection();
         
@@ -73,7 +73,7 @@ public class CategoryRepository(IDbContext dbContext) : ICategoryRepository
 
     public async Task<(IEnumerable<Category> categories, int totalCount)> LoadAll(int pageNumber, int pageSize, string sortBy)
     {
-        var query = CategoryQueries.GetAllQuery;
+        var query = CategoryQueries.GetAllQuery(sortBy);
         var parameters = new DynamicParameters();
        
         var offset = (pageNumber - 1) * pageSize;
