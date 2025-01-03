@@ -1,78 +1,84 @@
-﻿using Kitchen.Application.DTOs;
-using Kitchen.Domain.Contracts.Repositories;
-using Kitchen.Domain.Entities;
-using Kitchen.Infra.KitchenConnectionContext;
-using Microsoft.EntityFrameworkCore;
+﻿using Kitchen.Domain.Entities;
+using Kitchen.Domain.Interfaces;
 
-namespace Kitchen.Infra.Repositories
+namespace Kitchen.Infra.Repositories;
+
+public class MenuRepository(Context.DbContext dbContext) : IMenuRepository
 {
-    public class MenuRepository(HotelDbContext hotelDbContext) : IMenuRepository
+    private readonly Context.DbContext _dbContext = dbContext;
+
+   /* public async Task<Menu> AddMenu(Menu menu)
     {
-        private readonly HotelDbContext _hotelDbContext = hotelDbContext;
-        public async Task AddMenu(Menu menu)
+        await _dbContext.Menu.AddAsync(menu);
+        await _dbContext.SaveChangesAsync();
+        return menu;
+    }
+
+    public async Task<Menu?> GetById(Guid id)
+    {
+        var menu = await GetMenuWithIncludes()
+            .FirstOrDefaultAsync(m => m.Id == id);
+
+        return menu;
+    }
+
+    public async Task<Menu?> GetByName(string name)
+    {
+        return await _dbContext.Menu
+            .FirstOrDefaultAsync(m => m.Name == name);
+    }
+
+    public async Task<Menu> DeleteById(Menu menu)
+    {
+        _dbContext.Menu.Remove(menu);
+        await _dbContext.SaveChangesAsync();
+        return menu;
+    }
+
+    public async Task<Menu?> GetByMenu(FindMenuParamDto menuCategoryProduct)
+    {
+        var menu = await GetMenuWithIncludes()
+            .FirstOrDefaultAsync(menu => menu.MenuCategoryProduct
+                .Any(ms =>
+                    ms.MenuId == menuCategoryProduct.MenuId &&
+                    ms.WeekDay == menuCategoryProduct.WeekDay &&
+                    ms.CategoryId == menuCategoryProduct.CategoryId
+                )
+            );
+
+        if (menu is not null)
         {
-            await _hotelDbContext.Menu.AddAsync(menu);
-            await _hotelDbContext.SaveChangesAsync();
+            menu.MenuCategoryProduct = menu.MenuCategoryProduct
+                .Where(ms => ms.WeekDay == menuCategoryProduct.WeekDay)
+                .ToList();
         }
 
-        public async Task<Menu> GetById(Guid id)
-        {
-            var menu = await _hotelDbContext
-                .Menu
-                .Include(c => c.MenuSelections)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            return menu;
-        }
+        return menu;
+    }
 
-        public async Task<Menu> GetByName(string name)
-        {
-            var menu = await _hotelDbContext.Menu
-                .FirstOrDefaultAsync(m => m.Name == name);
-            return menu;
-        }
+    public async Task<MenuCategoryProduct> AddProduct(MenuCategoryProduct menu)
+    {
+        await _dbContext.MenuCategoryProduct.AddAsync(menu);
+        await _dbContext.SaveChangesAsync();
+        return menu;
+    }
 
-        public async Task DeleteById(Guid id)
-        {
-            var menu = await GetById(id);
+    public IQueryable<Menu> LoadAll()
+    {
+        return GetMenuWithIncludes().AsQueryable();
+    }
 
-            if (menu != null)
-            {
-                _hotelDbContext.Menu.Remove(menu);
-                await _hotelDbContext.SaveChangesAsync();
-            }
-        }
-
-        public async Task<Menu> GetByMenu(FindMenuDto menuSelections)
-        {
-            var menu = await _hotelDbContext.Menu
-                .Include(menu => menu.MenuSelections)
+    private IQueryable<Menu> GetMenuWithIncludes()
+    {
+        return _dbContext
+            .Menu
+                .Include(m => m.MenuCategoryProduct)
                 .ThenInclude(ms => ms.Category)
-                .Include(menu => menu.MenuSelections)
+                .Include(m => m.MenuCategoryProduct)
                 .ThenInclude(ms => ms.Product)
                 .ThenInclude(p => p.IngredientsOnProduct)
-                .ThenInclude(i => i.Ingredient)
-                .FirstOrDefaultAsync(menu => menu.MenuSelections
-                    .Any(ms =>
-                        ms.MenuId == menuSelections.MenuId &&
-                        ms.WeekDay == menuSelections.WeekDay &&
-                        ms.CategoryId == menuSelections.CategoryId
-                    )
-                );
-
-            if (menu != null)
-            {
-                menu.MenuSelections = menu.MenuSelections
-                    .Where(ms => ms.WeekDay == menuSelections.WeekDay)
-                    .ToList();
-            }
-
-            return menu;
-        }
-
-        public async Task AddProduct(MenuSelections menu)
-        {
-            await _hotelDbContext.MenuSelections.AddAsync(menu);
-            await _hotelDbContext.SaveChangesAsync();
-        }
-    }
+                .ThenInclude(pi => pi.Ingredient)
+                .ThenInclude(gp => gp.GroupsOnIngredient)
+                .ThenInclude(gp => gp.Group);
+    } */
 }

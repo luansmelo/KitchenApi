@@ -1,92 +1,91 @@
-﻿using Kitchen.Application.DTOs;
-using Kitchen.Domain.Contracts;
-using Kitchen.Domain.Contracts.UseCases;
+﻿using Dapper;
 using Kitchen.Domain.Entities;
-using Kitchen.Infra.KitchenConnectionContext;
-using Microsoft.EntityFrameworkCore;
+using Kitchen.Domain.Interfaces;
+using Kitchen.Domain.Pagination;
+using Kitchen.Infra.Context;
+using Kitchen.Infra.Queries;
 
-namespace Kitchen.Infra.Repositories
+namespace Kitchen.Infra.Repositories;
+
+public class CategoryRepository(IDbContext dbContext) : ICategoryRepository
 {
-    public class CategoryRepository : ICategoryRepository
+    public async Task<Category> AddCategory(Category category)
     {
-        private readonly HotelDbContext _hotelDbContext;
+        var query = CategoryQueries.AddCategoryQuery; 
+        
+        var parameters = new DynamicParameters();
+        parameters.Add("@Name", category.Name);
+        
+        using var connection = dbContext.Connection();
+       
+        var result = await connection.QueryAsync<Category>(query, parameters);
+        return result.FirstOrDefault();
+    }
 
-        public CategoryRepository(HotelDbContext hotelDbContext)
-        {
-            _hotelDbContext = hotelDbContext;
-        }
+    public async Task<Category> DeleteById(Guid id)
+    {
+        var query = CategoryQueries.DeleteByIdQuery;
+        var parameters = new DynamicParameters();
+        parameters.Add("@Id", id);
+        
+        using var connection = dbContext.Connection();
+        
+        var result = await connection.QueryFirstOrDefaultAsync<Category>(query, parameters);
+        return result;
+    }
 
-        public async Task<Category> AddCategory(Category category)
-        {
-            await _hotelDbContext.Category.AddAsync(category);
-            await _hotelDbContext.SaveChangesAsync();
-            return category;
-        }
+    public async Task<Category?> GetById(Guid id)
+    {
+        var query = CategoryQueries.GetByIdQuery;
+        var parameters = new DynamicParameters();
+        parameters.Add("@Id", id);
+        
+        using var connection = dbContext.Connection();
+        
+        var result = await connection.QueryFirstOrDefaultAsync<Category>(query, parameters);
+        return result;
+    }
 
-        public async Task<Category> DeleteById(Category category)
-        {
-            _hotelDbContext.Category.Remove(category);
-            await _hotelDbContext.SaveChangesAsync();
-            return category;
-        }
+    public async Task<Category?> GetByName(string name)
+    {   
+        var query = CategoryQueries.GetByNameQuery;
+        var parameters = new DynamicParameters();
+        parameters.Add("@Name", name);
+        
+        using var connection = dbContext.Connection();
+        
+        var result = await connection.QueryFirstOrDefaultAsync<Category>(query, parameters);
+        return result;
+    }
 
-        public async Task<Category> GetById(Guid id)
-        {
-            return await _hotelDbContext.Category
-                .FirstOrDefaultAsync(c => c.Id == id);
-        }
+    public async Task<Category> UpdateById(Guid id, Category category)
+    {
+        var query = CategoryQueries.UpdateByIdQuery;
+        var parameters = new DynamicParameters();
+        
+        parameters.Add("@Id", id);
+        
+        using var connection = dbContext.Connection();
+        
+        var result = await connection.QueryFirstOrDefaultAsync<Category>(query, parameters);
+        return result;
+    }
 
-        public async Task<Category> GetByName(string name)
-        {
-            return await _hotelDbContext
-                .Category
-                .FirstOrDefaultAsync(c => c.Name == name);
-        }
+    public async Task<(IEnumerable<Category> categories, int totalCount)> LoadAll(int pageNumber, int pageSize, string sortBy)
+    {
+        var query = CategoryQueries.GetAllQuery;
+        var parameters = new DynamicParameters();
+       
+        var offset = (pageNumber - 1) * pageSize;
+        
+        parameters.Add("@PageSize", pageSize);
+        parameters.Add("@OffSet", offset);
+        
+        using var connection = dbContext.Connection();
+        var categories = await connection.QueryAsync<Category>(query, parameters);
 
-        public async Task<Category> UpdateById(Guid id, Category category)
-        {
-            var categoryUpdate = await GetById(id);
-            if (categoryUpdate != null)
-            {    
-
-               categoryUpdate.Name = category.Name;
-
-              _hotelDbContext.Category.Update(categoryUpdate);
-
-              await _hotelDbContext.SaveChangesAsync();
-            }
-
-            return categoryUpdate;
-        }
-
-        public async Task<FindCategoriesResponse> LoadAll(int page, int pageSize, string sortOrder)
-        {
-            var query = _hotelDbContext.Category.AsQueryable();
-
-            var totalItems = await query.CountAsync();
-            var totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
-
-            query = sortOrder.ToLower() == "desc" ? query
-                .OrderByDescending(c => c.Name) 
-                : query.OrderBy(c => c.Name);
-
-            var categories = await query
-               .Skip((page - 1) * pageSize)
-               .Take(pageSize)
-               .ToListAsync();
-
-            var categoryDtos = categories.Select(c => new CategoryDto
-            {
-                Id = c.Id,
-                Name = c.Name
-            }).ToList();
-
-            return new FindCategoriesResponse
-            {
-                Categories = categoryDtos,
-                TotalPages = totalPages,
-                TotalItems = totalItems
-            };
-        }
+        var countQuery = CategoryQueries.GetCountQuery;
+        var totalCount = await connection.ExecuteScalarAsync<int>(countQuery);
+        return (categories, totalCount);
     }
 }

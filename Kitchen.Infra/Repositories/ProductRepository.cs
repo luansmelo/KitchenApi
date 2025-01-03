@@ -1,178 +1,110 @@
-﻿using Kitchen.Infra.KitchenConnectionContext;
-using Kitchen.Application.Contracts.UseCases;
-using Microsoft.EntityFrameworkCore;
-using Kitchen.Domain.Contracts.Repositories;
-using Kitchen.Domain.Entities;
-using Kitchen.Application.DTOs.Measurement;
-using Kitchen.Application.DTOs;
+﻿using Kitchen.Domain.Entities;
+using Kitchen.Domain.Interfaces;
+using Kitchen.Infra.Context;
 
-namespace Kitchen.Infra.Repositories
+namespace Kitchen.Infra.Repositories;
+
+public class ProductRepository(Context.DbContext dbContext) : IProductRepository
 {
-    public class ProductRepository : IProductRepository
+    private readonly Context.DbContext _dbContext = dbContext;
+
+   /* public async Task AddInputToProduct(AddIngredientToProductInput product)
     {
-        private readonly HotelDbContext _hotelDbContext;
-
-        public ProductRepository(HotelDbContext hotelDbContext)
+        foreach (var ingredient in product.Ingredients)
         {
-            _hotelDbContext = hotelDbContext;
-        }
+            var existingIngredient = await _hotelDbContext.Ingredient.FindAsync(ingredient.Id);
 
-        public async Task AddInputToProduct(AddIngredientToProductInput product)
-        {
-            foreach (var ingredient in product.Ingredients)
+            if (existingIngredient is null) continue;
+            var inputAddToProduct = new IngredientsOnProduct
             {
-                var existingIngredient = await _hotelDbContext.Ingredient.FindAsync(ingredient.Id);
-
-                if (existingIngredient != null)
-                {
-                    var inputAddToProduct = new IngredientsOnProduct
-                    {
-                        ProductId = product.ProductId,
-                        IngredientId = ingredient.Id,
-                        Measurement = ingredient.MeasurementName,
-                        Grammage = ingredient.Grammage
-                    };
-
-                    await _hotelDbContext.IngredientsOnProduct.AddAsync(inputAddToProduct);
-                }
-            }
-
-            await _hotelDbContext.SaveChangesAsync();
-        }
-
-        public async Task<Product> AddProduct(Product product)
-        {
-            await _hotelDbContext.Product.AddAsync(product);
-            await _hotelDbContext.SaveChangesAsync();
-            return product;
-        }
-
-        public async Task<Product> DeleteById(Product product)
-        {
-            _hotelDbContext.Product.Remove(product);
-            await _hotelDbContext.SaveChangesAsync();
-            return product;
-        }
-
-        public async Task<Product> GetById(Guid id)
-        {
-            return await _hotelDbContext
-                .Product
-                .Include(product => product.IngredientsOnProduct)
-                .ThenInclude(iop => iop.Ingredient)
-                .ThenInclude(ingredient => ingredient.Measurement)
-                .Include(product => product.IngredientsOnProduct)
-                .ThenInclude(iop => iop.Ingredient)
-                .ThenInclude(ingredient => ingredient.GroupsOnIngredient)
-                .ThenInclude(goi => goi.Group)
-                .SingleOrDefaultAsync(p => p.Id == id);
-        }
-
-        public async Task<Product> GetByName(string name)
-        {
-            return await _hotelDbContext
-                .Product
-                .FirstOrDefaultAsync(c => c.Name == name);
-        }
-
-        public async Task<FindProductsResponse> LoadAll(int page, int pageSize, string sortOrder)
-        {
-            var query = _hotelDbContext.Product.AsQueryable();
-
-            var totalItems = await query.CountAsync();
-            var totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
-
-            query = sortOrder.ToLower() == "desc" ? query.OrderByDescending(c => c.Name) : query.OrderBy(c => c.Name);
-
-            var products = await query
-                .Skip((page - 1) * pageSize)
-                .Take(pageSize)
-                .Include(product => product.IngredientsOnProduct)
-                .ThenInclude(iop => iop.Ingredient)
-                .ThenInclude(ingredient => ingredient.Measurement)
-                .Include(product => product.IngredientsOnProduct)
-                .ThenInclude(iop => iop.Ingredient)
-                .ThenInclude(ingredient => ingredient.GroupsOnIngredient)
-                .ThenInclude(goi => goi.Group)
-                .ToListAsync();
-
-            var productResponses = products.Select(product => new ProductResponse
-            {
-                Id = product.Id,
-                Name = product.Name,
-                Accession = product.Accession,
-                Description = product.Description,
-                PreparationTime = product.PreparationTime,
-                Resource = product.Resource,
-                Photo_url = product.Photo_url,
-                Status = product.Status.ToString() ?? "",
-                Ingredients = product.IngredientsOnProduct.Select(iop => new IngredientResponse
-                {
-                    Id = iop.Ingredient.Id,
-                    Name = iop.Ingredient.Name,
-                    Code = iop.Ingredient.Code,
-                    Grammage = iop.Grammage,
-                    UnitPrice = iop.Ingredient.UnitPrice,
-                    Measurement = new MeasurementDto
-                    {
-                        Id = iop.Ingredient.Measurement.Id,
-                        Name = iop.Measurement,
-                    },
-                    Groups = iop.Ingredient.GroupsOnIngredient.Select(groupOnIngredient => new GroupDto
-                    {
-                        Id = groupOnIngredient.Group.Id,
-                        Name = groupOnIngredient.Group.Name
-                    }).ToList()
-                }).ToList()
-            }).ToList();
-
-            return new FindProductsResponse
-            {
-                Products = productResponses,
-                TotalPages = totalPages,
-                TotalItems = totalItems
+                ProductId = product.ProductId,
+                IngredientId = ingredient.Id,
+                Measurement = ingredient.MeasurementName,
+                Grammage = ingredient.Grammage
             };
+
+            await _hotelDbContext.IngredientsOnProduct.AddAsync(inputAddToProduct);
         }
 
-        public async Task RemoveInputToProduct(Guid productId, Guid ingredientId)
+        await _hotelDbContext.SaveChangesAsync();
+    }
+
+    public async Task<Product> AddProduct(Product product)
+    {
+        await _dbContext.Product.AddAsync(product);
+        await _dbContext.SaveChangesAsync();
+        return product;
+    }
+
+    public async Task<Product> DeleteById(Product product)
+    {
+        _dbContext.Product.Remove(product);
+        await _dbContext.SaveChangesAsync();
+        return product;
+    }
+
+    public async Task<Product?> GetById(Guid id)
+    {
+        return await _dbContext
+            .Product
+            .Include(product => product.IngredientsOnProduct)
+            .ThenInclude(iop => iop.Ingredient)
+            .ThenInclude(ingredient => ingredient.Measurement)
+            .Include(product => product.IngredientsOnProduct)
+            .ThenInclude(iop => iop.Ingredient)
+            .ThenInclude(ingredient => ingredient.GroupsOnIngredient)
+            .ThenInclude(goi => goi.Group)
+            .SingleOrDefaultAsync(p => p.Id == id);
+    }
+
+    public async Task<Product?> GetByName(string name)
+    {
+        return await _dbContext
+            .Product
+            .FirstOrDefaultAsync(c => c.Name == name);
+    }
+
+    public IQueryable<Product> LoadAll()
+    {
+       return _dbContext.Product.AsQueryable();
+    }
+
+    public async Task RemoveInputToProduct(Guid productId, Guid ingredientId)
+    {
+        var ingredient = await _dbContext
+            .IngredientsOnProduct
+            .FirstOrDefaultAsync(i => i.ProductId == productId && i.IngredientId == ingredientId);
+
+        if (ingredient is not null)
         {
-            var ingredient = await _hotelDbContext
-                .IngredientsOnProduct
-                .FirstOrDefaultAsync(i => i.ProductId == productId && i.IngredientId == ingredientId);
-
-            if (ingredient != null)
-            {
-                _hotelDbContext.IngredientsOnProduct.Remove(ingredient);
-                await _hotelDbContext.SaveChangesAsync();
-            }
-        }
-
-        public async Task UpdateById(Guid id, UpdateProduct input)
-        {
-            var existingProduct = await GetById(id) ?? throw new Exception("Produto não encontrado");
-
-            existingProduct.Name = !string.IsNullOrEmpty(input.Name) ? input.Name : existingProduct.Name;
-            existingProduct.Description = !string.IsNullOrEmpty(input.Description) ? input.Description : existingProduct.Description;
-            existingProduct.Accession = input.Accession != 0 ? input.Accession : existingProduct.Accession;
-            existingProduct.PreparationTime = !string.IsNullOrEmpty(input.PreparationTime) ? input.PreparationTime : existingProduct.PreparationTime;
-            existingProduct.Resource = !string.IsNullOrEmpty(input.Resource) ? input.Resource : existingProduct.Resource;
-
-            foreach (var ingredientInput in input.Ingredients)
-            {
-                var existingIngredient = existingProduct
-                            .IngredientsOnProduct
-                            .FirstOrDefault(iop =>
-                            iop.IngredientId == ingredientInput.Id && iop.ProductId == id);
-
-                if (existingIngredient != null)
-                {
-                    existingIngredient.Measurement = ingredientInput.MeasurementName;
-                    existingIngredient.Grammage = ingredientInput.Grammage;
-                }
-            }
-
-            _hotelDbContext.Update(existingProduct);
-            await _hotelDbContext.SaveChangesAsync();
+            _dbContext.IngredientsOnProduct.Remove(ingredient);
+            await _dbContext.SaveChangesAsync();
         }
     }
+
+    /*public async Task UpdateById(Guid id, Product input)
+    {
+        var existingProduct = await GetById(id) ?? throw new Exception("Produto não encontrado");
+
+        existingProduct.Name = !string.IsNullOrEmpty(input.Name) ? input.Name : existingProduct.Name;
+        existingProduct.Description = !string.IsNullOrEmpty(input.Description) ? input.Description : existingProduct.Description;
+        existingProduct.Accession = input.Accession != 0 ? input.Accession : existingProduct.Accession;
+        existingProduct.PreparationTime = !string.IsNullOrEmpty(input.PreparationTime) ? input.PreparationTime : existingProduct.PreparationTime;
+        existingProduct.Resource = !string.IsNullOrEmpty(input.Resource) ? input.Resource : existingProduct.Resource;
+
+        foreach (var ingredientInput in input.Ingredients)
+        {
+            var existingIngredient = existingProduct
+                        .IngredientsOnProduct
+                        .FirstOrDefault(iop =>
+                        iop.IngredientId == ingredientInput.Id && iop.ProductId == id);
+
+            if (existingIngredient is null) continue;
+            existingIngredient.Measurement = ingredientInput.MeasurementName;
+            existingIngredient.Grammage = ingredientInput.Grammage;
+        }
+
+        _hotelDbContext.Update(existingProduct);
+        await _hotelDbContext.SaveChangesAsync();
+    }*/
 }
